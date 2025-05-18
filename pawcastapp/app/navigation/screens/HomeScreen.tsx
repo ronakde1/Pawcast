@@ -105,7 +105,10 @@ export default function HomeScreen({ navigation }: HomeScreenProps): JSX.Element
             <Text onPress={() => navigation.navigate('Home')} style={styles.text}>
               Home Screen
             </Text>
-            <Text style={styles.text}>Temperature: {temp}</Text>
+            <Text style={styles.text}>
+              Temperature: {temp}
+              
+              </Text>
           </ImageBackground>
         </SafeAreaView>
       </SafeAreaProvider>

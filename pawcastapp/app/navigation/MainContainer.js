@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,12 +8,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DetailsScreen from './screens/DetailsScreen';
 import HomeScreen from './screens/HomeScreen';
 import SettingsScreen from './screens/SettingsScreen';
+//import ClickedScreen from './screens/ClickedScreen'
 
 //Screen names
 const homeName = "Home";
 const detailsName = "Details";
 const settingsName = "Settings";
 
+//const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function MainContainer() {
@@ -51,7 +52,8 @@ function MainContainer() {
         <Tab.Screen name={detailsName} component={DetailsScreen} />
         <Tab.Screen name={settingsName} component={SettingsScreen} />
 
-      </Tab.Navigator>
+      </Tab.Navigator>  
+      
   );
 }
 
