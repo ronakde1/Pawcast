@@ -5,6 +5,11 @@ export default function RootLayout() {
   screenOptions={{
     headerShown: false,
   }}>
-    <Stack.Screen name="index" />
+    <Stack.Screen name="(tabs)" 
+    options = {{headerTitle: "Pawcast"}}
+    />
+    <Stack.Screen name="about" 
+    options = {{headerTitle: "About"}}
+    />
 </Stack>;
 }
