@@ -53,6 +53,7 @@ export const styles = StyleSheet.create({
     height: "100%",
     width: "100%"
   },
+<<<<<<< HEAD
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.25)", // Optional dim overlay
@@ -113,3 +114,14 @@ export const styles = StyleSheet.create({
     color: "#000",
   },
 })
+=======
+  boxstyle: {
+      borderWidth: 1,
+      borderColor: 'gray',
+      padding: 10,
+      borderRadius: 5,
+      height: 40,
+      width: 250,
+    },
+  });
+>>>>>>> 2fef974 (database start)
