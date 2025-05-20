@@ -3,6 +3,19 @@ import {Link} from "expo-router";
 import PagerView from "react-native-pager-view";
 import DogWeather from "./weather";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const now = new Date()
+
+function addHours(date: Date, hours: number) {
+  const newDate = new Date(date)
+  newDate.setHours(date.getHours() + hours)
+  return newDate
+}
+
+function dateToHourString(date: Date) {
+  return date.getHours() + ": 00"
+}
 
 
 export default function Home() {
@@ -13,8 +26,8 @@ export default function Home() {
       temperature: "23°C",
       weather: "SUNNY",
       slots: [
-        { time: "10 : 00", score: 8, color: "#38B000" },
-        { time: "11 : 00", score: 6, color: "#F4A300" },
+        { time: dateToHourString(now), score: 8, color: "#38B000" },
+        { time: dateToHourString(addHours(now, 1)), score: 6, color: "#F4A300" },
         { time: "12 : 00", score: 7, color: "#F4A300" },
         { time: "13 : 00", score: 4, color: "#D00000" },
         { time: "14 : 00", score: 6, color: "#F4A300" },
@@ -40,10 +53,13 @@ export default function Home() {
   ]
 
   return (
-    <View style={styles.overlay}>
+    <SafeAreaView
+      style={styles.overlay}
+      edges={["top"]}
+    >
       <View style={styles.header}>
-          <MaterialCommunityIcons name="menu" size={35} color="#fff" />
-          <Text style={styles.title}>Dog-walking time</Text>
+        <MaterialCommunityIcons name="menu" size={35} color="#fff" />
+        <Text style={styles.title}>Dog-walking time</Text>
       </View>
 
       <PagerView style={{ flex: 1 }} initialPage={0}>

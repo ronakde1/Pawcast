@@ -6,7 +6,10 @@ export default function TabsLayout() {
     tabBarActiveTintColor: "#ffd33d"
   }}>
     <Tabs.Screen name="index" 
-    options = {{headerTitle: "Pawcast"}}
+      options = {{
+        headerTitle: "Pawcast",
+        headerShown: false
+      }}
     />
     <Tabs.Screen name="details" 
     options = {{headerTitle: "Details"}}
@@ -14,8 +17,8 @@ export default function TabsLayout() {
     <Tabs.Screen name="information" 
     options = {{headerTitle: "Information"}}
     />
-    <Tabs.Screen name="welcome" 
-    options = {{headerTitle: "Welcome"}}
+    <Tabs.Screen name="register" 
+    options = {{headerTitle: "register"}}
     />
 </Tabs>;
 }
