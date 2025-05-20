@@ -7,6 +7,55 @@ import { JSX } from 'react/jsx-runtime';
 import { useState, useEffect } from 'react';  
 
 
+
+type RootStackParamList = {
+  Home: undefined;
+};
+
+type HomeScreenProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
+  route: RouteProp<RootStackParamList, 'Home'>;
+};
+
+const image = { uri: 'https://legacy.reactjs.org/logo-og.png' };
+
+
+
+export default function HomeScreen({ navigation }: HomeScreenProps): JSX.Element {
+  return (
+    <View style={{ width: '100%', height: '100%' }}>
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container} edges={['left', 'right']}>
+          <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+            <Text onPress={() => navigation.navigate('Home')} style={styles.text}>
+              Home Screen
+            </Text>
+            <Text style={styles.text}>Temperature: {temp}</Text>
+          </ImageBackground>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+  },
+  image: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  text: {
+    margin: 50,
+    backgroundColor: '#aaaaaa',
+    fontSize: 26,
+    fontWeight: 'bold',
+  },
+});
+
 //-------------------------
 import { fetchWeatherApi } from 'openmeteo';
 const params = {
@@ -82,51 +131,3 @@ getTemperature(5).then(result => {
 
 
 //-------------------------
-
-type RootStackParamList = {
-  Home: undefined;
-};
-
-type HomeScreenProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
-  route: RouteProp<RootStackParamList, 'Home'>;
-};
-
-const image = { uri: 'https://legacy.reactjs.org/logo-og.png' };
-
-
-
-export default function HomeScreen({ navigation }: HomeScreenProps): JSX.Element {
-  return (
-    <View style={{ width: '100%', height: '100%' }}>
-      <SafeAreaProvider>
-        <SafeAreaView style={styles.container} edges={['left', 'right']}>
-          <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-            <Text onPress={() => navigation.navigate('Home')} style={styles.text}>
-              Home Screen
-            </Text>
-            <Text style={styles.text}>Temperature: {temp}</Text>
-          </ImageBackground>
-        </SafeAreaView>
-      </SafeAreaProvider>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-  },
-  image: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  text: {
-    margin: 50,
-    backgroundColor: '#aaaaaa',
-    fontSize: 26,
-    fontWeight: 'bold',
-  },
-});
