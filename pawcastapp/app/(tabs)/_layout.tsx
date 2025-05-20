@@ -8,8 +8,14 @@ export default function TabsLayout() {
     <Tabs.Screen name="index" 
     options = {{headerTitle: "Pawcast"}}
     />
-    <Tabs.Screen name="about" 
-    options = {{headerTitle: "About"}}
+    <Tabs.Screen name="details" 
+    options = {{headerTitle: "Details"}}
+    />
+    <Tabs.Screen name="information" 
+    options = {{headerTitle: "Information"}}
+    />
+    <Tabs.Screen name="welcome" 
+    options = {{headerTitle: "Welcome"}}
     />
 </Tabs>;
 }
