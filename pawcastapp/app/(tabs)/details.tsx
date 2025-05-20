@@ -8,7 +8,6 @@ export default function Home() {
       <Text style={{ color: 'red' }}>Hello</Text>
       <Link href={"/"}>Go to home screen</Link>
       {<Link href={"/information"}>Go to information</Link>}
-      <Link href={"/welcome"}>Go to welcome </Link>
   </View>
 
   );

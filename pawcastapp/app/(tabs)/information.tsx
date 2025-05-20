@@ -9,7 +9,6 @@ export default function information() {
       <Text style={{ color: 'red' }}>Information</Text>
       <Link href={"/"}>Go to home screen</Link>
       <Link href={"/details"}>Go to details </Link>
-      <Link href={"/welcome"}>Go to welcome </Link>
 
   </View>
 
