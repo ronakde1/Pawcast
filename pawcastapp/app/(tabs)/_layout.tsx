@@ -14,8 +14,8 @@ export default function TabsLayout() {
     <Tabs.Screen name="information" 
     options = {{headerTitle: "Information"}}
     />
-    <Tabs.Screen name="welcome" 
-    options = {{headerTitle: "Welcome"}}
+    <Tabs.Screen name="register" 
+    options = {{headerTitle: "register"}}
     />
 </Tabs>;
 }
