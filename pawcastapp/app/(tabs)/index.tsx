@@ -67,7 +67,7 @@ export default function Home() {
           <DogWeather key={index} {...dog} />
         ))}
       </PagerView>
-    </View>
+    </SafeAreaView>
   )
 }
 
