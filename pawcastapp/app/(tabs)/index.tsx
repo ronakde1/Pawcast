@@ -1,53 +1,70 @@
 import { Text, View, Image, StyleSheet, FlatList } from "react-native";
 import {Link} from "expo-router";
+import PagerView from "react-native-pager-view";
+import DogWeather from "./weather";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-const timeSlots = [
-  // Need to compute colour for these timings
-  { time: "10 : 00", score: 8, color: "#38B000" },
-  { time: "11 : 00", score: 6, color: "#F4A300" },
-  { time: "12 : 00", score: 7, color: "#F4A300" },
-  { time: "13 : 00", score: 4, color: "#D00000" },
-  { time: "14 : 00", score: 6, color: "#F4A300" },
-  { time: "15 : 00", score: 7, color: "#F4A300" },
-  { time: "16 : 00", score: 4, color: "#D00000" },
-]
 
 
 export default function Home() {
+  const dogPages = [
+    {
+      name: "Lil Grey",
+      image: require("../../assets/images/Husky.png"),
+      temperature: "23°C",
+      weather: "SUNNY",
+      slots: [
+        { time: "10 : 00", score: 8, color: "#38B000" },
+        { time: "11 : 00", score: 6, color: "#F4A300" },
+        { time: "12 : 00", score: 7, color: "#F4A300" },
+        { time: "13 : 00", score: 4, color: "#D00000" },
+        { time: "14 : 00", score: 6, color: "#F4A300" },
+        { time: "15 : 00", score: 7, color: "#F4A300" },
+        { time: "16 : 00", score: 4, color: "#D00000" },
+        { time: "17 : 00", score: 6, color: "#F4A300" },
+        { time: "18 : 00", score: 7, color: "#F4A300" },
+        { time: "19 : 00", score: 4, color: "#D00000" },
+      ],
+    },
+    {
+      name: "Barkley",
+      image: require("../../assets/images/Husky.png"),
+      temperature: "18°C",
+      weather: "CLOUDY",
+      slots: [
+        { time: "09 : 00", score: 7, color: "#90BE6D" },
+        { time: "10 : 00", score: 5, color: "#F9C74F" },
+        { time: "11 : 00", score: 4, color: "#F8961E" },
+        { time: "12 : 00", score: 3, color: "#F94144" },
+      ],
+    },
+  ]
+
   return (
     <View style={styles.overlay}>
-        <View style={styles.header}>
+      <View style={styles.header}>
           <MaterialCommunityIcons name="menu" size={35} color="#fff" />
           <Text style={styles.title}>Dog-walking time</Text>
-        </View>
-
-        <Text style={styles.subtitle}>Lil Grey</Text>
-
-        <View style={styles.weatherBox}>
-          <Text style={styles.temp}>23°C</Text>
-          <Text style={styles.weather}>SUNNY</Text>
-        </View>
-
-        <FlatList
-          data={timeSlots}
-          keyExtractor={(item) => item.time}
-          contentContainerStyle={styles.slotList}
-          renderItem={({ item }) => (
-            <View style={[styles.slot, { backgroundColor: item.color }]}>
-              <Text style={styles.slotTime}>{item.time}</Text>
-              <Text style={styles.slotScore}>{item.score}</Text>
-            </View>
-          )}
-        />
       </View>
-  );
+
+      <PagerView style={{ flex: 1 }} initialPage={0}>
+        {dogPages.map((dog, index) => (
+          <DogWeather key={index} {...dog} />
+        ))}
+      </PagerView>
+    </View>
+  )
 }
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  background: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
   },
   image: {
     height: "100%",
@@ -57,12 +74,13 @@ export const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.25)", // Optional dim overlay
-    padding: 20,
+    paddingTop: 5
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
+    paddingBottom: 5
   },
   title: {
     fontSize: 24,
