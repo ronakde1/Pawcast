@@ -1,11 +1,24 @@
 import { Text, View, Image, StyleSheet, FlatList } from "react-native";
 import {Link} from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const now = new Date()
+
+function addHours(date: Date, hours: number) {
+  const newDate = new Date(date)
+  newDate.setHours(date.getHours() + hours)
+  return newDate
+}
+
+function dateToHourString(date: Date) {
+  return date.getHours() + ": 00"
+}
 
 const timeSlots = [
   // Need to compute colour for these timings
-  { time: "10 : 00", score: 8, color: "#38B000" },
-  { time: "11 : 00", score: 6, color: "#F4A300" },
+  { time: dateToHourString(now), score: 8, color: "#38B000" },
+  { time: dateToHourString(addHours(now, 1)), score: 6, color: "#F4A300" },
   { time: "12 : 00", score: 7, color: "#F4A300" },
   { time: "13 : 00", score: 4, color: "#D00000" },
   { time: "14 : 00", score: 6, color: "#F4A300" },
@@ -16,33 +29,37 @@ const timeSlots = [
 
 export default function Home() {
   return (
-    <View style={styles.overlay}>
-        <View style={styles.header}>
-          <MaterialCommunityIcons name="menu" size={35} color="#fff" />
-          <Text style={styles.title}>Dog-walking time</Text>
-        </View>
-
-        <Text style={styles.subtitle}>Lil Grey</Text>
-
-        <View style={styles.weatherBox}>
-          <Text style={styles.temp}>23°C</Text>
-          <Text style={styles.weather}>SUNNY</Text>
-        </View>
-
-        <FlatList
-          data={timeSlots}
-          keyExtractor={(item) => item.time}
-          contentContainerStyle={styles.slotList}
-          renderItem={({ item }) => (
-            <View style={[styles.slot, { backgroundColor: item.color }]}>
-              <Text style={styles.slotTime}>{item.time}</Text>
-              <Text style={styles.slotScore}>{item.score}</Text>
-            </View>
-          )}
-        />
+    <SafeAreaView
+      style={styles.overlay}
+      edges={["top"]}
+    >
+      <View style={styles.header}>
+        <MaterialCommunityIcons name="menu" size={35} color="#fff" />
+        <Text style={styles.title}>Dog-walking time</Text>
       </View>
+
+      <Text style={styles.subtitle}>Lil Grey</Text>
+
+      <View style={styles.weatherBox}>
+        <Text style={styles.temp}>23°C</Text>
+        <Text style={styles.weather}>SUNNY</Text>
+      </View>
+
+      <FlatList
+        data={timeSlots}
+        keyExtractor={(item) => item.time}
+        contentContainerStyle={styles.slotList}
+        renderItem={({ item }) => (
+          <View style={[styles.slot, { backgroundColor: item.color }]}>
+            <Text style={styles.slotTime}>{item.time}</Text>
+            <Text style={styles.slotScore}>{item.score}</Text>
+          </View>
+        )}
+      />
+    </SafeAreaView>
   );
 }
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -58,6 +75,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.25)", // Optional dim overlay
     padding: 20,
+    paddingBottom: 0
   },
   header: {
     flexDirection: "row",
