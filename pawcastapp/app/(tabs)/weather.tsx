@@ -4,7 +4,7 @@ import {Link} from "expo-router";
 
 type Slot = {
   time: string;
-  score: number;
+  score: Promise<number | undefined>;
   color: string;
 };
 
