@@ -1,14 +1,14 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 export default function WeatherPage() {
   return (
     <SafeAreaView style={styles.container}>
-      {/* <ImageBackground
-        source={require('Husky.png')} // Update to your image path
+      <ImageBackground
+        source={require("../../assets/images/Husky.png")} // Update to your image path
         style={styles.background}
         resizeMode="cover"
-      > */}
+      >
         <View style={styles.content}>
           <Text style={styles.time}>10 : 00</Text>
 
@@ -22,7 +22,7 @@ export default function WeatherPage() {
             <Text style={styles.ratingText}>8</Text>
           </View>
         </View>
-      {/* </ImageBackground> */}
+      </ImageBackground>
     </SafeAreaView>
   );
 }
