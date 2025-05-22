@@ -9,6 +9,5 @@ export default function Home() {
       <Link href={"/"}>Go to home screen</Link>
       {<Link href={"/information"}>Go to information</Link>}
   </View>
-
   );
 }

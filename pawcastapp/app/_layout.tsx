@@ -8,5 +8,6 @@ export default function RootLayout() {
     <Stack.Screen name="(tabs)" 
     options = {{headerTitle: "Pawcast"}}
     />
+    
 </Stack>;
 }
