@@ -5,6 +5,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchWeatherApi } from 'openmeteo';
 import PagerView from "react-native-pager-view";
 import DogWeather from "./weather";
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs();
+
 
 //------------------------
 
