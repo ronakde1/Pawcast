@@ -5,7 +5,7 @@ export default function WeatherPage() {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
-        source={require("../../assets/images/Husky.png")} // Update to your image path
+        source={require('../../assets/images/Husky.png')} // Update to your image path
         style={styles.background}
         resizeMode="cover"
       >
