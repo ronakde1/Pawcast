@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
 
-export default function Register() {
+export default function UserDetails() {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
+  const router = useRouter();
 
   const handleNext = () => {
     console.log('Name:', name);
     console.log('Location:', location);
-    // You can add navigation or form submission here
+    router.push({
+      pathname: "/register/dog",
+      params: { name, location },
+    });
   };
 
   return (
@@ -76,39 +81,3 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
-
-
-{/*  return (
-  <View style={styles.container}>
-    <Text>WELCOME</Text>
-    <Text>Tell us something about you:</Text>
-    <View>
-    <Text>Name</Text>
-    <label>
-      <input
-        style={styles.boxstyle}
-        value={name}
-        onChange={e => setName(e.target.value)}
-      />
-    </label>
-    {name !== '' &&
-      <p>Your name is {name}.</p>
-    }
-    </View>
-    <View>
-    <Text>Location</Text>
-    <label>
-      <input
-        style={styles.boxstyle}
-        value={location}
-        onChange={e => setLocation(e.target.value)}
-      />
-    </label>
-    {location !== '' &&
-      <p>Your location is {location}.</p>
-    }
-    <Button onPress={handleNext} title="Next" color="#841584" />
-    </View>
-  </View>
-  );
-} */}

@@ -41,7 +41,7 @@ export default function TabsLayout() {
 
     }}
     />
-    <Tabs.Screen name="register" 
+    {/* <Tabs.Screen name="register" 
      options = {{headerTitle: "register", 
       tabBarIcon: ({focused, color}) => 
         <Ionicons 
@@ -50,7 +50,7 @@ export default function TabsLayout() {
         color = {color}
         />
     }}
-    />
+    /> */}
     <Tabs.Screen name="weather" 
     options={{
       tabBarStyle: { display: 'none' },
