@@ -118,8 +118,6 @@ function colouring(temperature: number) {
     }
 }
 
-
-
 const timeSlots = [
   // Need to compute colour for these timings
   { time: dateToHourString(now), score: temperature(addHours(now, 1)),   color: "#F4A300"},
@@ -131,26 +129,27 @@ const timeSlots = [
   { time: dateToHourString(addHours(now, 6)), score: temperature(addHours(now, 6)),   color: "#D00000"},
 ]
 
-const dogPages = [
-  {
-    name: "Lil Grey",
-    image: require("../../assets/images/Husky.png"),
-    temperature: "23°C",
-    weather: "SUNNY",
-    slots: timeSlots
-  },
-  {
-    name: "Barkley",
-    image: require("../../assets/images/Husky.png"),
-    temperature: "18°C",
-    weather: "CLOUDY",
-    slots: timeSlots
-  },
-];
 
-const currenttemp = temperature(now);
-//const currenttemp = 200;
-export default function Home() {
+export default async function Home() {
+  const currenttemp = await temperature(now);
+
+  const dogPages = [
+    {
+      name: "Lil Grey",
+      image: require("../../assets/images/Husky.png"),
+      temperature: `${currenttemp}°C`,
+      weather: "SUNNY",
+      slots: timeSlots
+    },
+    {
+      name: "Barkley",
+      image: require("../../assets/images/retriever.png"),
+      temperature: `${currenttemp}°C`,
+      weather: "CLOUDY",
+      slots: timeSlots
+    },
+  ];
+
   return (
     <SafeAreaView
       style={styles.overlay}
