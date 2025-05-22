@@ -3,6 +3,8 @@ import { Link } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchWeatherApi } from 'openmeteo';
+import PagerView from "react-native-pager-view";
+import DogWeather from "./weather";
 
 //------------------------
 
@@ -129,6 +131,23 @@ const timeSlots = [
   { time: dateToHourString(addHours(now, 6)), score: temperature(addHours(now, 6)),   color: "#D00000"},
 ]
 
+const dogPages = [
+  {
+    name: "Lil Grey",
+    image: require("../../assets/images/Husky.png"),
+    temperature: "23°C",
+    weather: "SUNNY",
+    slots: timeSlots
+  },
+  {
+    name: "Barkley",
+    image: require("../../assets/images/Husky.png"),
+    temperature: "18°C",
+    weather: "CLOUDY",
+    slots: timeSlots
+  },
+];
+
 const currenttemp = temperature(now);
 //const currenttemp = 200;
 export default function Home() {
@@ -142,24 +161,11 @@ export default function Home() {
         <Text style={styles.title}>Dog-walking time</Text>
       </View>
 
-      <Text style={styles.subtitle}>Lil Grey</Text>
-
-      <View style={styles.weatherBox}>
-        <Text style={styles.temp}>{currenttemp}C</Text>
-        <Text style={styles.weather}>SUNNY</Text>
-      </View>
-
-      <FlatList
-        data={timeSlots}
-        keyExtractor={(item) => item.time}
-        contentContainerStyle={styles.slotList}
-        renderItem={({ item }) => (
-          <View style={[styles.slot, { backgroundColor: item.color }]}>
-            <Text style={styles.slotTime}>{item.time}</Text>
-            <Text style={styles.slotScore}>{item.score}</Text>
-          </View>
-        )}
-      />
+      <PagerView style={{ flex: 1 }} initialPage={0}>
+        {dogPages.map((dog, index) => (
+          <DogWeather key={index} {...dog} />
+        ))}
+      </PagerView>
     </SafeAreaView>
   );
 }
@@ -174,7 +180,9 @@ export const styles = StyleSheet.create({
     height: "100%",
     width: "100%"
   },
-
+  background: {
+  flex: 1,
+  },
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.25)", // Optional dim overlay
