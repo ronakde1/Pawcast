@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 
 export default function DogDetails() {
   const [dogName, setDogName] = useState('');
   const [breed, setBreed] = useState('');
   const router = useRouter();
 
+  const breedsList = [
+    { label: 'Husky', value: 'husky' },
+    { label: 'Labrador', value: 'labrador' },
+    { label: 'Shiba Inu', value: 'shiba' },
+  ]
+
   const handleNext = () => {
     router.push({
       pathname: "/register/dog",
-      params: { },
+      params: { }, // Need to pass state
     });
   };
 
   const handleSubmit = () => {
     router.push({
       pathname: "/(tabs)",
-      params: {  }
+      params: {  } // Need to pass state
     })
   }
 
@@ -38,16 +45,21 @@ export default function DogDetails() {
 
       <View style={styles.inputContainer}>
         <Text>Breed</Text>
-        <TextInput
-          style={styles.boxstyle}
+        <RNPickerSelect
+          onValueChange={(value) => setBreed(value)}
+          placeholder={{ label: 'Choose the breed', value: null }}
+          items={breedsList}
+          style={pickerSelectStyles}
           value={breed}
-          onChangeText={setBreed}
-          placeholder=""
         />
       </View>
 
-      <Button onPress={handleNext} title="Next" color="#841584" />
-      <Button onPress={handleSubmit} title="Register" color="#841584" />
+      <View style={styles.btn}>
+        <Button onPress={handleNext} title="Next" color="#841584" />
+      </View>
+      <View style={styles.btn} >
+        <Button onPress={handleSubmit} title="Register" color="#841584" />
+      </View>
     </View>
   );
 }
@@ -73,11 +85,32 @@ const styles = StyleSheet.create({
   },
   boxstyle: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: 'grey',
     borderWidth: 1,
     paddingHorizontal: 10,
     marginTop: 5,
     marginBottom: 5,
     borderRadius: 5,
+  },
+  btn: {
+    padding: 2
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    color: 'black',
+  },
+  viewContainer: {
+    height: 40,
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginTop: 5,
+    marginBottom: 5,
+    justifyContent: 'center',
   },
 });
