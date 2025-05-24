@@ -4,6 +4,7 @@ import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import { useRegistration, Dog } from './registrationContext';
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function DogDetails() {
   const [dogName, setDogName] = useState('');
@@ -54,7 +55,7 @@ export default function DogDetails() {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newDog: Dog = {
       name: dogName,
       breed: breed,
@@ -62,10 +63,19 @@ export default function DogDetails() {
       imageUri: dogImageUri,
     };
 
-    setData(prev => ({
-      ...prev,
-      dogs: [...prev.dogs, newDog],
-    }));
+    setData(prev => {
+      const updated = {
+        ...prev,
+        dogs: [...prev.dogs, newDog],
+      };
+
+      // Save updated data to AsyncStorage to use after registration
+      AsyncStorage.setItem('userData', JSON.stringify(updated)).catch(err => {
+        console.error('Failed to save to AsyncStorage:', err);
+      });
+
+      return updated;
+    });
     
     router.push({
       pathname: "/(tabs)",

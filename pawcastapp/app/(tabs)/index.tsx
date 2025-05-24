@@ -6,8 +6,9 @@ import { fetchWeatherApi } from 'openmeteo';
 import PagerView from "react-native-pager-view";
 import DogWeather from "./weather";
 import { LogBox } from 'react-native';
-import { useRegistration } from "../register/registrationContext";
+// import { useRegistration } from "../register/registrationContext";
 import { useMemo, useEffect, useState } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 LogBox.ignoreAllLogs();
 
 //------------------------
@@ -131,19 +132,36 @@ const timeSlots = [
   { time: dateToHourString(addHours(now, 6)), score: temperature(addHours(now, 6)),   color: "#D00000"},
 ]
 
-
 export default function Home() {
   const [currentTemp, setCurrentTemp] = useState<number | undefined>(undefined);
+  const [modalVisible, setModalVisible] = useState(false); // Added state for modal visibility
+  const [userData, setData] = useState(null);;
 
   useEffect(() => {
-    temperature(now).then(setCurrentTemp);
+    async function fetchData() {
+      // Fetch temperature
+      const temp = await temperature(now);
+      setCurrentTemp(temp);
+
+      // Fetch saved user data from AsyncStorage
+      try {
+        const jsonString = await AsyncStorage.getItem("userData");
+        if (jsonString != null) {
+          const savedData = JSON.parse(jsonString);
+          setData(savedData); // update your context or state
+        }
+      } catch (error) {
+        console.error("Error loading user data from AsyncStorage:", error);
+      }
+    }
+
+    fetchData();
   }, []);
-  
-  const data = useRegistration();
 
   const dogPages = useMemo(() => {
-    console.log("Data: " + data.data.dogs)
-    return data.data.dogs.map(dog => ({
+    if (!userData || !userData.dogs) return [];
+
+    return userData.dogs.map(dog => ({
       name: dog.name,
       image: dog.imageUri
         ? { uri: dog.imageUri }
@@ -152,7 +170,7 @@ export default function Home() {
       weather: "SUNNY",
       slots: timeSlots,
     }));
-  }, [data.data.dogs, currentTemp]);
+  }, [userData, currentTemp]);
 
   return (
     <SafeAreaView
