@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function DogDetails() {
   const [dogName, setDogName] = useState('');
@@ -21,12 +22,19 @@ export default function DogDetails() {
     });
   };
 
-  const handleSubmit = () => {
-    router.push({
-      pathname: "/(tabs)",
-      params: {  } // Need to pass state
-    })
-  }
+  const handleSubmit = async () => {
+    try {
+      await AsyncStorage.setItem("dogName", dogName);
+      await AsyncStorage.setItem("breed", breed);
+
+      router.push({
+        pathname: "/(tabs)",
+        params: {}  // Need to pass state
+      });
+    } catch (error) {
+      console.error("Error saving dog data:", error);
+    }
+  };
 
   return (
     <View style={styles.container}>

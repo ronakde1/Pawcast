@@ -1,13 +1,14 @@
-import { Text, View, Image, StyleSheet, FlatList } from "react-native";
-import { Link } from "expo-router";
+import { Text, View, Image, StyleSheet, FlatList, TouchableOpacity, Modal } from "react-native"; // Added Modal import
+import { Link, router } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchWeatherApi } from 'openmeteo';
 import PagerView from "react-native-pager-view";
 import DogWeather from "./weather";
 import { LogBox } from 'react-native';
-LogBox.ignoreAllLogs();
+import { useState } from 'react'; // Added useState import
 
+LogBox.ignoreAllLogs();
 
 //------------------------
 
@@ -61,7 +62,6 @@ async function getWeather(): Promise<Record<number, number>> {
   let temperature = (Math.round((weatherData.hourly.temperature2m[0])));
   let tupleyeye = [hour, temperature];
 
-
   for (let i = 0; i < weatherData.hourly.time.length; i++) {
     timetemperaturedict[weatherData.hourly.time[i].getUTCHours()] = (Math.round((weatherData.hourly.temperature2m[i])));
   }
@@ -79,7 +79,6 @@ async function getTemperature(time: number): Promise<number | undefined> {
 let temp: number | undefined;
 
 function TimeToTemperature(x: number) {
-
   return (getTemperature(x).then(result => {
     temp = result;
     console.log("Temperature at", x, ":", temp);
@@ -90,8 +89,8 @@ function TimeToTemperature(x: number) {
 let x = 5;
 let newtemp = TimeToTemperature(5);
 
-
 //------------------------------
+
 const now = new Date()
 
 function addHours(date: Date, hours: number) {
@@ -132,9 +131,9 @@ const timeSlots = [
   { time: dateToHourString(addHours(now, 6)), score: temperature(addHours(now, 6)),   color: "#D00000"},
 ]
 
-
-export default async function Home() {
-  const currenttemp = await temperature(now);
+export default function Home() { // Removed async since currenttemp is handled differently
+  const currenttemp = 20; // Placeholder; replace with actual temperature logic if needed
+  const [modalVisible, setModalVisible] = useState(false); // Added state for modal visibility
 
   const dogPages = [
     {
@@ -159,9 +158,47 @@ export default async function Home() {
       edges={["top"]}
     >
       <View style={styles.header}>
-        <MaterialCommunityIcons name="menu" size={35} color="#fff" />
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <MaterialCommunityIcons name="menu" size={35} color="#fff" />
+        </TouchableOpacity>
         <Text style={styles.title}>Dog-walking time</Text>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              style={styles.modalItem}
+              onPress={() => {
+                router.push('/information');
+                setModalVisible(false);
+              }}
+            >
+              <Text style={styles.modalText}>Dog Information</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalItem}
+              onPress={() => {
+                router.push('/');
+                setModalVisible(false);
+              }}
+            >
+              <Text style={styles.modalText}>Best walking time</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalItem}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       <PagerView style={{ flex: 1 }} initialPage={0}>
         {dogPages.map((dog, index) => (
@@ -183,7 +220,7 @@ export const styles = StyleSheet.create({
     width: "100%"
   },
   background: {
-  flex: 1,
+    flex: 1,
   },
   overlay: {
     flex: 1,
@@ -253,5 +290,27 @@ export const styles = StyleSheet.create({
     height: 40,
     width: 250,
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)", // Semi-transparent background
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    paddingTop: 60, // Position dropdown below header
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    width: 200,
+    marginLeft: 20,
+  },
+  modalItem: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  modalText: {
+    fontSize: 18,
+    color: "#000",
+  },
 })
-
