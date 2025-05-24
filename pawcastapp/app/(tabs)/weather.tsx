@@ -23,6 +23,7 @@ export default function DogWeather({
   weather,
   slots,
 }: Props) {
+  console.log("Dog image:", image);
   return (
     <ImageBackground source={image} style={styles.background} resizeMode="cover">
       <Text style={styles.subtitle}>{name}</Text>

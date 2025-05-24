@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
+import { useRegistration } from './registrationContext';
 
 export default function UserDetails() {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
+  const { setData } = useRegistration();
   const router = useRouter();
 
   const handleNext = () => {
     console.log('Name:', name);
     console.log('Location:', location);
+    setData(prev => ({
+      ...prev,
+      username: name,
+      location: location,
+    }));
     router.push({
       pathname: "/register/dog",
-      params: { name, location },
     });
   };
 
@@ -29,9 +35,6 @@ export default function UserDetails() {
           onChangeText={setName}
           placeholder="Enter your name"
         />
-        {name !== '' && (
-          <Text>Your name is {name}.</Text>
-        )}
       </View>
 
       <View style={styles.inputContainer}>
@@ -42,12 +45,9 @@ export default function UserDetails() {
           onChangeText={setLocation}
           placeholder="Enter your location"
         />
-        {location !== '' && (
-          <Text>Your location is {location}.</Text>
-        )}
       </View>
 
-      <Button onPress={handleNext} title="Next" color="#841584" />
+      <Button onPress={handleNext} title="Next" color="#2C2C2C" />
     </View>
   );
 }

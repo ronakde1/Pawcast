@@ -2,29 +2,73 @@ import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import { useRegistration, Dog } from './registrationContext';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function DogDetails() {
   const [dogName, setDogName] = useState('');
   const [breed, setBreed] = useState('');
+  const [dogAge, setDogAge] = useState('');
+  const [dogImageUri, setDogImageUri] = useState('');
+  const { setData } = useRegistration();
   const router = useRouter();
 
   const breedsList = [
     { label: 'Husky', value: 'husky' },
     { label: 'Labrador', value: 'labrador' },
     { label: 'Shiba Inu', value: 'shiba' },
+    { label: 'Golden Retriver', value: 'retriever' },
+    { label: 'Poodle', value: 'poodle' },
   ]
 
-  const handleNext = () => {
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images', 'videos'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setDogImageUri(result.assets[0].uri);
+    }
+  };
+
+  const handleAddMore = () => {
+    const newDog: Dog = {
+      name: dogName,
+      breed: breed,
+      age: Number(dogAge),
+      imageUri: dogImageUri,
+    };
+
+    setData(prev => ({
+      ...prev,
+      dogs: [...prev.dogs, newDog],
+    }));
+
     router.push({
-      pathname: "/register/dog",
-      params: { }, // Need to pass state
+      pathname: "/register/dog"
     });
   };
 
   const handleSubmit = () => {
+    const newDog: Dog = {
+      name: dogName,
+      breed: breed,
+      age: Number(dogAge),
+      imageUri: dogImageUri,
+    };
+
+    setData(prev => ({
+      ...prev,
+      dogs: [...prev.dogs, newDog],
+    }));
+    
     router.push({
       pathname: "/(tabs)",
-      params: {  } // Need to pass state
     })
   }
 
@@ -54,11 +98,27 @@ export default function DogDetails() {
         />
       </View>
 
-      <View style={styles.btn}>
-        <Button onPress={handleNext} title="Next" color="#841584" />
+      <View style={styles.inputContainer}>
+        <Text>Dog Age (years)</Text>
+        <TextInput
+          style={styles.boxstyle}
+          keyboardType='numeric'
+          value={dogAge}
+          onChangeText={setDogAge}
+          placeholder=""
+        />
       </View>
-      <View style={styles.btn} >
-        <Button onPress={handleSubmit} title="Register" color="#841584" />
+
+      <View style={styles.btn}>
+        <Button title="Upload Image" onPress={pickImage} color="grey"/>
+      </View>
+      <View style={styles.navContainer}>
+        <View style={styles.btn}>
+          <Button onPress={handleAddMore} title="Add more" color="#2C2C2C" />
+        </View>
+        <View style={styles.btn} >
+          <Button onPress={handleSubmit} title="Register" color="#2C2C2C" />
+        </View>
       </View>
     </View>
   );
@@ -94,6 +154,9 @@ const styles = StyleSheet.create({
   },
   btn: {
     padding: 2
+  },
+  navContainer: {
+    paddingTop: 50,
   },
 });
 

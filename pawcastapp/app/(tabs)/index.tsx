@@ -6,6 +6,8 @@ import { fetchWeatherApi } from 'openmeteo';
 import PagerView from "react-native-pager-view";
 import DogWeather from "./weather";
 import { LogBox } from 'react-native';
+import { useRegistration } from "../register/registrationContext";
+import { useMemo, useEffect, useState } from 'react';
 LogBox.ignoreAllLogs();
 
 
@@ -133,25 +135,27 @@ const timeSlots = [
 ]
 
 
-export default async function Home() {
-  const currenttemp = await temperature(now);
+export default function Home() {
+  const [currentTemp, setCurrentTemp] = useState<number | undefined>(undefined);
 
-  const dogPages = [
-    {
-      name: "Lil Grey",
-      image: require("../../assets/images/Husky.png"),
-      temperature: `${currenttemp}°C`,
+  useEffect(() => {
+    temperature(now).then(setCurrentTemp);
+  }, []);
+  
+  const data = useRegistration();
+
+  const dogPages = useMemo(() => {
+    console.log("Data: " + data.data.dogs)
+    return data.data.dogs.map(dog => ({
+      name: dog.name,
+      image: dog.imageUri
+        ? { uri: dog.imageUri }
+        : require('../../assets/images/Husky.png'),
+      temperature: `${currentTemp}°C`,
       weather: "SUNNY",
-      slots: timeSlots
-    },
-    {
-      name: "Barkley",
-      image: require("../../assets/images/retriever.png"),
-      temperature: `${currenttemp}°C`,
-      weather: "CLOUDY",
-      slots: timeSlots
-    },
-  ];
+      slots: timeSlots,
+    }));
+  }, [data.data.dogs, currentTemp]);
 
   return (
     <SafeAreaView

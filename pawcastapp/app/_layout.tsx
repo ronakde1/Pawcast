@@ -1,5 +1,8 @@
 import { Stack } from 'expo-router';
+import { RegistrationProvider } from './register/registrationContext';
 
 export default function RootLayout() {
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return <RegistrationProvider>
+    <Stack screenOptions={{ headerShown: false }} />;
+  </RegistrationProvider>
 }
