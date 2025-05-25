@@ -259,11 +259,16 @@ export const styles = StyleSheet.create({
     color: "#FFE600",
   },
   subtitle: {
-    color: "#fff",
+    color: "#000",
     marginTop: 4,
     marginBottom: 20,
     fontStyle: "italic",
     textAlign: "center",
+    alignSelf: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderRadius: 20,
+    padding: 10,
+    alignItems: "center",
   },
   weatherBox: {
     alignSelf: "center",
