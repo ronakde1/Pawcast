@@ -12,6 +12,7 @@ export default function DogDetails() {
   const [dogAge, setDogAge] = useState('');
   const [dogImageUri, setDogImageUri] = useState('');
   const [imageName, setImageName] = useState<string>('');
+  const [errors, setErrors] = useState<{ name?: string; breed?: string }>({});
   const { setData } = useRegistration();
   const router = useRouter();
 
@@ -22,6 +23,14 @@ export default function DogDetails() {
     { label: 'Golden Retriver', value: 'retriever' },
     { label: 'Poodle', value: 'poodle' },
   ]
+
+  const validate = () => {
+    const newErrors: { name?: string; breed?: string } = {};
+    if (!dogName.trim()) newErrors.name = 'Dog name is required';
+    if (!breed) newErrors.breed = 'Breed is required';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -40,8 +49,10 @@ export default function DogDetails() {
   };
 
   const handleAddMore = () => {
+    if (!validate()) return;
+
     const newDog: Dog = {
-      name: dogName,
+      name: dogName.trim(),
       breed: breed,
       age: Number(dogAge),
       imageUri: dogImageUri,
@@ -58,8 +69,10 @@ export default function DogDetails() {
   };
 
   const handleSubmit = async () => {
+    if (!validate()) return;
+
     const newDog: Dog = {
-      name: dogName,
+      name: dogName.trim(),
       breed: breed,
       age: Number(dogAge),
       imageUri: dogImageUri,
@@ -97,6 +110,7 @@ export default function DogDetails() {
           onChangeText={setDogName}
           placeholder=""
         />
+        {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
       </View>
 
       <View style={styles.inputContainer}>
@@ -108,6 +122,7 @@ export default function DogDetails() {
           style={pickerSelectStyles}
           value={breed}
         />
+        {errors.breed && <Text style={styles.errorText}>{errors.breed}</Text>}
       </View>
 
       <View style={styles.inputContainer}>
@@ -129,6 +144,9 @@ export default function DogDetails() {
         {imageName !== '' && <Text>{imageName}</Text>}
       </View>
       <View style={styles.navContainer}>
+        <View style={styles.btn}>
+          <Button onPress={() => router.back()} title="Back" color="#2C2C2C" />
+        </View>
         <View style={styles.btn}>
           <Button onPress={handleAddMore} title="Add more" color="#2C2C2C" />
         </View>
@@ -173,6 +191,11 @@ const styles = StyleSheet.create({
   },
   navContainer: {
     paddingTop: 50,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 2,
   },
 });
 

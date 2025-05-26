@@ -161,16 +161,16 @@ async function colouring(scorePromise: Promise<number | undefined>): Promise<str
   try {
     const score = await scorePromise;
     if (score === undefined) {
-      return "#00ff00"; 
+      return "rgba(34, 197, 94, 0.7)";
     } else if (score <= 4) {
-      return "#D00000";
+      return "rgba(220, 38, 38, 0.7)";
     } else if (score < 7) {
-      return "#F4A300";
+      return "rgba(245, 158, 11, 0.7)"; 
     } else {
-      return "#38B000";
+      return "rgba(34, 197, 94, 0.7)";
     }
   } catch {
-    return "#00ff00"; 
+    return "rgba(34, 197, 94, 0.7)";
   }
 }
 
@@ -214,7 +214,7 @@ export default function Home() {
 
 
   async function buildTimeSlots(breed: string) {
-    const hoursToAdd = [0, 1, 2, 3, 4, 5, 6];
+    const hoursToAdd = Array.from({ length: 12 }, (_, i) => i);
   
     const timeSlots = await Promise.all(
       hoursToAdd.map(async (h) => {
