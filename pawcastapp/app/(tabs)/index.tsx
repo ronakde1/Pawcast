@@ -114,8 +114,6 @@ function TimeToTemperature(x: number) {
 }
 
 
-let x = 5;
-let newtemp = TimeToTemperature(5);
 
 //------------------------------
 
@@ -173,9 +171,9 @@ export default function Home() {
 
   const { data } = useRegistration();
   const breed = (data.dogs[0]?.breed ?? 'No breed available');
-  console.log(breed);
+  //console.log(breed);
   const breed_n = breedtochange(breed)
-  console.log(breed_n)
+  //console.log(breed_n)
 
   // const timeSlots = [
   //   { time: dateToHourString(now),              score: score(now,breed_n),                color: colouring(score(now,breed_n))},

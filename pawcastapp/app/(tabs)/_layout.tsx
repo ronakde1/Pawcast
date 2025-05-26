@@ -11,6 +11,7 @@ export default function TabsLayout() {
       options = {{
         headerTitle: "Pawcast",
         headerShown: false, 
+        tabBarLabel: "Home",
         tabBarIcon: ({focused, color}) => 
         <Ionicons 
         name = {focused? "home-sharp": "home-outline"} 
@@ -21,6 +22,7 @@ export default function TabsLayout() {
     />
     <Tabs.Screen name="details" 
     options = {{headerTitle: "Details",
+      tabBarLabel: "Details",
       tabBarIcon: ({focused, color}) => 
         <Ionicons 
         name = {focused? "ellipsis-vertical-circle-sharp": "ellipsis-vertical-circle-outline"} 
@@ -33,6 +35,7 @@ export default function TabsLayout() {
     />
     <Tabs.Screen name="information" 
     options = {{headerTitle: "Information", 
+      tabBarLabel: "Information",
       tabBarIcon: ({focused, color}) => 
         <Ionicons 
         name = {focused? "information-circle-sharp": "information-circle-outline"} 
