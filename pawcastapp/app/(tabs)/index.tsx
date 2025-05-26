@@ -9,6 +9,7 @@ import { LogBox } from 'react-native';
 // import { useRegistration } from "../register/registrationContext";
 import { useMemo, useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRegistration } from '../register/registrationContext';
 LogBox.ignoreAllLogs();
 
 //------------------------
@@ -77,6 +78,30 @@ async function getTemperature(time: number): Promise<number | undefined> {
   }
   return timetemperaturedict[time];
 }
+async function TemptoScore(
+  inputPromise: Promise<number | undefined>,breed:number
+): Promise<number | undefined> {
+  const temperature = await inputPromise;
+  if (temperature !== undefined) {
+    return (10-Math.min(Math.abs((18+breed-temperature)),9)); 
+    //higher temp < 18+breed = higher score
+    //higher temp > 18+breed = lower score
+    //optimal temperature for a breed is given by 18 + breed 
+    // e.g. if a breed has an optimal temperature of 20, breed = 2
+  }
+  return undefined;
+}
+const breedDictionary: { [key: string]: number } = {
+  "husky": -8,
+  "labrador": 3,
+  "shiba": -2,
+  "retriever": 1,
+  "poodle": 2,
+  "No breed available" : 0,
+  "": 0
+};
+
+
 let temp: number | undefined;
 
 function TimeToTemperature(x: number) {
@@ -87,6 +112,8 @@ function TimeToTemperature(x: number) {
   })
   )
 }
+
+
 let x = 5;
 let newtemp = TimeToTemperature(5);
 
@@ -108,34 +135,53 @@ function temperature(dateyeye: Date){
   let hour = dateyeye.getHours();
   return TimeToTemperature(hour);
 }
+function score(dateyeye: Date, breed_n: number){
+  // const { data } = useRegistration();
+  // const breed = (data.dogs[0]?.breed ?? 'No breed available');
+  // const breed_n = breedtochange(breed)
+  // console.log("working!",breed_n)
+  return TemptoScore(temperature(dateyeye),breed_n);
+}
 
-function colouring(temperature: number) {
-    if (temperature <= 15) {
+
+function breedtochange(breedname: string): number{
+  return breedDictionary[breedname];
+}
+
+
+function colouring(score: number) {
+    if (score <= 4) {
       return "#D00000";
-    } else if (temperature < 20) {
+    } else if (score < 7) {
       return "#F4A300";
-    } else if (temperature < 25) {
-      return "#38B000";
     } else {
-      return "#D00000";
+      return "#38B000";
     }
 }
 
-const timeSlots = [
-  // Need to compute colour for these timings
-  { time: dateToHourString(now), score: temperature(addHours(now, 1)),   color: "#F4A300"},
-  { time: dateToHourString(addHours(now, 1)), score: temperature(addHours(now, 1)),   color: "#F4A300"},
-  { time: dateToHourString(addHours(now, 2)), score: temperature(addHours(now, 2)),   color: "#38B000"},
-  { time: dateToHourString(addHours(now, 3)), score: temperature(addHours(now, 3)),   color: "#38B000"},
-  { time: dateToHourString(addHours(now, 4)), score: temperature(addHours(now, 4)),   color: "#D00000"},
-  { time: dateToHourString(addHours(now, 5)), score: temperature(addHours(now, 5)),   color: "#F4A300"},
-  { time: dateToHourString(addHours(now, 6)), score: temperature(addHours(now, 6)),   color: "#D00000"},
-]
+
 
 export default function Home() {
+  const { data } = useRegistration();
+  const breed = (data.dogs[0]?.breed ?? 'No breed available');
+  console.log(breed);
+  const breed_n = breedtochange(breed)
+  console.log(breed_n)
+
+  const timeSlots = [
+    // Need to compute colour for these timings
+    { time: dateToHourString(now),              score: score(now,breed_n),                color: "#F4A300"},
+    { time: dateToHourString(addHours(now, 1)), score: score(addHours(now, 1),breed_n),   color: "#F4A300"},
+    { time: dateToHourString(addHours(now, 2)), score: score(addHours(now, 2),breed_n),   color: "#38B000"},
+    { time: dateToHourString(addHours(now, 3)), score: score(addHours(now, 3),breed_n),   color: "#38B000"},
+    { time: dateToHourString(addHours(now, 4)), score: score(addHours(now, 4),breed_n),   color: "#D00000"},
+    { time: dateToHourString(addHours(now, 5)), score: score(addHours(now, 5),breed_n),   color: "#F4A300"},
+    { time: dateToHourString(addHours(now, 6)), score: score(addHours(now, 6),breed_n),   color: "#D00000"},
+  ]
+
   const [currentTemp, setCurrentTemp] = useState<number | undefined>(undefined);
   const [modalVisible, setModalVisible] = useState(false); // Added state for modal visibility
-  const [userData, setData] = useState(null);;
+  const [userData, setData] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
