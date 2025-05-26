@@ -3,12 +3,12 @@ import { fetchWeatherApi } from 'openmeteo';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  ImageBackground,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
+import Menu from './menu';
 
 interface WeatherData {
   temperature: number;
@@ -79,7 +79,8 @@ export default function WeatherPage() {
   }, [targetHour]);
 
   return (
-    <View style={styles.overlay}>
+    <SafeAreaView style={styles.overlay}>
+      <Menu title="Weather Information"></Menu>
       <View style={styles.content}>
         <View style={styles.timeBox}>
           <Text style={styles.time}>{targetHour}</Text>
@@ -101,17 +102,11 @@ export default function WeatherPage() {
           </>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  background: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   content: {
     alignItems: 'center',
     justifyContent: 'flex-start',

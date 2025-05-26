@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.25)", // Optional dim overlay
-    padding: 15,
+    padding: 20,
     paddingBottom: 0
   },
   header: {
