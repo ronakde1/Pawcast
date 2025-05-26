@@ -6,13 +6,24 @@ import { fetchWeatherApi } from 'openmeteo';
 import PagerView from "react-native-pager-view";
 import DogWeather from "./weather";
 import { LogBox } from 'react-native';
-// import { useRegistration } from "../register/registrationContext";
 import { useMemo, useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRegistration } from '../register/registrationContext';
+import { Dog, useRegistration } from '../register/registrationContext';
 LogBox.ignoreAllLogs();
 
 //------------------------
+
+type DogHourScore = {
+  name: string;
+  image: { uri: string } | number;
+  temperature: string;
+  weather: string;
+  slots: {
+    time: string;
+    score: number | undefined;
+    color: string;
+  }[];
+};
 
 const params = {
   "latitude": 52.202936,
@@ -163,33 +174,52 @@ async function colouring(scorePromise: Promise<number | undefined>): Promise<str
 }
 
 
-
-
 export default function Home() {
+  const [modalVisible, setModalVisible] = useState(false); // Added state for modal visibility
+  // const [userData, setData] = useState(null);
+  const [dogsHourScores, setScores] = useState<DogHourScore[] | null>(null);
 
-  const { data } = useRegistration();
-  const breed = (data.dogs[0]?.breed ?? 'No breed available');
-  //console.log(breed);
-  const breed_n = breedtochange(breed)
-  //console.log(breed_n)
+  useEffect(() => {
+    async function fetchData() {
+      // Fetch temperature
+      const temp = await temperature(now);
 
-  // const timeSlots = [
-  //   { time: dateToHourString(now),              score: score(now,breed_n),                color: colouring(score(now,breed_n))},
-  //   { time: dateToHourString(addHours(now, 1)), score: score(addHours(now, 1),breed_n),   color: colouring(score(addHours(now, 1),breed_n))},
-  //   { time: dateToHourString(addHours(now, 2)), score: score(addHours(now, 2),breed_n),   color: "#38B000"},
-  //   { time: dateToHourString(addHours(now, 3)), score: score(addHours(now, 3),breed_n),   color: "#38B000"},
-  //   { time: dateToHourString(addHours(now, 4)), score: score(addHours(now, 4),breed_n),   color: "#D00000"},
-  //   { time: dateToHourString(addHours(now, 5)), score: score(addHours(now, 5),breed_n),   color: "#F4A300"},
-  //   { time: dateToHourString(addHours(now, 6)), score: score(addHours(now, 6),breed_n),   color: "#D00000"},
-  // ]
+      // Fetch saved user data from AsyncStorage
+      try {
+        const jsonString = await AsyncStorage.getItem("userData");
+        if (jsonString != null) {
+          const savedData = JSON.parse(jsonString);
 
-  async function buildTimeSlots() {
+          // Create time slots
+          const dogsHourScores = await Promise.all(
+            savedData.dogs.map(async (dog: Dog) => ({
+              name: dog.name,
+              image: dog.imageUri
+                ? { uri: dog.imageUri }
+                : require('../../assets/images/Husky.png'),
+              temperature: `${temp}°C`,
+              weather: "SUNNY",
+              slots: await buildTimeSlots(dog.breed),
+            }))
+          )
+          setScores(dogsHourScores);
+        }
+      } catch (error) {
+        console.error("Error loading user data from AsyncStorage:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+
+  async function buildTimeSlots(breed: string) {
     const hoursToAdd = [0, 1, 2, 3, 4, 5, 6];
   
     const timeSlots = await Promise.all(
       hoursToAdd.map(async (h) => {
         const time = addHours(now, h);
-        const scoreVal = await score(time, breed_n);
+        const scoreVal = await score(time, breedtochange(breed));
         const colorVal = await colouring(Promise.resolve(scoreVal));
   
         return {
@@ -202,53 +232,6 @@ export default function Home() {
   
     return timeSlots;
   }
-  const [timeSlots, setTimeSlots] = useState<{ time: string; score: number | undefined; color: string }[]>([]);
-
-    useEffect(() => {
-      buildTimeSlots().then(setTimeSlots);
-    }, []);
-
-
-
-
-  const [currentTemp, setCurrentTemp] = useState<number | undefined>(undefined);
-  const [modalVisible, setModalVisible] = useState(false); // Added state for modal visibility
-  const [userData, setData] = useState(null);
-
-  useEffect(() => {
-    async function fetchData() {
-      // Fetch temperature
-      const temp = await temperature(now);
-      setCurrentTemp(temp);
-
-      // Fetch saved user data from AsyncStorage
-      try {
-        const jsonString = await AsyncStorage.getItem("userData");
-        if (jsonString != null) {
-          const savedData = JSON.parse(jsonString);
-          setData(savedData); // update your context or state
-        }
-      } catch (error) {
-        console.error("Error loading user data from AsyncStorage:", error);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  const dogPages = useMemo(() => {
-    if (!userData || !userData.dogs) return [];
-
-    return userData.dogs.map(dog => ({
-      name: dog.name,
-      image: dog.imageUri
-        ? { uri: dog.imageUri }
-        : require('../../assets/images/Husky.png'),
-      temperature: `${currentTemp}°C`,
-      weather: "SUNNY",
-      slots: timeSlots,
-    }));
-  }, [userData, currentTemp]);
 
   return (
     <SafeAreaView
@@ -299,7 +282,7 @@ export default function Home() {
       </Modal>
 
       <PagerView style={{ flex: 1 }} initialPage={0}>
-        {dogPages.map((dog, index) => (
+        {dogsHourScores?.map((dog, index) => (
           <DogWeather key={index} {...dog} />
         ))}
       </PagerView>

@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native';
 
 type Slot = {
   time: string;
-  score: Promise<number | undefined>;
+  score: number | undefined;
   color: string;
 };
 
