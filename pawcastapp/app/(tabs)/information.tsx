@@ -11,6 +11,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BlurView } from "expo-blur";
 import { Dog } from "../register/registrationContext";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Menu from "./menu";
 
 export default function Information() {
   // const [dogName, setDogName] = useState("");
@@ -119,15 +121,18 @@ export default function Information() {
   );
 
   return (
-    <View style={styles.overlay}>
-      <Text style={styles.title}>Dog information</Text>
+    <SafeAreaView style={styles.overlay}>
+      <Menu title="Dog Information"></Menu>
 
-      {dogInfo?.map((dog: Dog, index: number) => (
-        <View style={styles.box} key={index}>
-          {renderRow("Name", dog.name, (text) => handleChange(text, index, "name"), "name", index)}
-          {renderRow("Breed", dog.breed, (text) => handleChange(text, index, "breed"), "breed", index)}
-        </View>
-      ))}
+      <View>
+        {dogInfo?.map((dog: Dog, index: number) => (
+          <View style={styles.box} key={index}>
+            {renderRow("Name", dog.name, (text) => handleChange(text, index, "name"), "name", index)}
+            {renderRow("Breed", dog.breed, (text) => handleChange(text, index, "breed"), "breed", index)}
+          </View>
+        ))}
+      </View>
+
 
 
       {/* <BlurView intensity={70} tint="light" style={styles.card}>
@@ -139,7 +144,7 @@ export default function Information() {
           <Text style={[styles.edit, { opacity: 0.4 }]}>Edit</Text>
         </View>
       </BlurView> */}
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -149,8 +154,9 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    padding: 20,
     backgroundColor: "rgba(0,0,0,0.35)",
+    padding: 20,
+    paddingBottom: 0
   },
   title: {
     fontSize: 28,

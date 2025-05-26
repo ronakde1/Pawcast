@@ -1,4 +1,4 @@
-import { Text, View, Image, StyleSheet, FlatList, TouchableOpacity, Modal } from "react-native"; // Added Modal import
+import { Text, View, Image, StyleSheet, FlatList, TouchableOpacity, Modal } from "react-native";
 import { Link, router } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,6 +9,7 @@ import { LogBox } from 'react-native';
 import { useMemo, useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dog, useRegistration } from '../register/registrationContext';
+import Menu from "./menu";
 LogBox.ignoreAllLogs();
 
 //------------------------
@@ -237,48 +238,7 @@ export default function Home() {
       style={styles.overlay}
       edges={["top"]}
     >
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <MaterialCommunityIcons name="menu" size={35} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Dog-walking time</Text>
-      </View>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <TouchableOpacity
-              style={styles.modalItem}
-              onPress={() => {
-                router.push('/information');
-                setModalVisible(false);
-              }}
-            >
-              <Text style={styles.modalText}>Dog Information</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalItem}
-              onPress={() => {
-                router.push('/');
-                setModalVisible(false);
-              }}
-            >
-              <Text style={styles.modalText}>Best walking time</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalItem}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.modalText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <Menu title={"Dog Walking Time"}></Menu>
 
       <PagerView style={{ flex: 1 }} initialPage={0}>
         {dogsHourScores?.map((dog, index) => (

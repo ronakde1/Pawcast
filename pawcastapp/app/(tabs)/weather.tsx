@@ -44,10 +44,17 @@ export default function DogWeather({
   return (
     <ImageBackground source={image} style={styles.background} resizeMode="cover">
       <Text style={styles.subtitle}>{name}</Text>
-      <View style={styles.weatherBox}>
+      <TouchableOpacity 
+        style={styles.weatherBox}
+        onPress={() => {
+          router.push({
+            pathname: '/details'
+          })
+        }}
+      >
         <Text style={styles.temp}>{temperature}</Text>
         <Text style={styles.weather}>{weather}</Text>
-      </View>
+      </TouchableOpacity>
 
       <FlatList
         data={resolvedSlots}
