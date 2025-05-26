@@ -7,10 +7,10 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 1. Install dependencies
 
    ```bash
-   npm install
+   npm installY
    ```
 
-2. Start the app
+2. Start the appcd 
 
    ```bash
    npx expo start
