@@ -1,6 +1,8 @@
 import { Text, View, Image, StyleSheet, FlatList, ImageBackground } from "react-native";
 import {styles} from "./index";
 import {Link} from "expo-router";
+import { TouchableOpacity } from 'react-native';
+
 
 type Slot = {
   time: string;
@@ -36,10 +38,13 @@ export default function DogWeather({
           keyExtractor={(item) => item.time}
           contentContainerStyle={styles.slotList}
           renderItem={({ item }) => (
-            <View style={[styles.slot, { backgroundColor: item.color }]}>
+            <TouchableOpacity
+              style={[styles.slot, { backgroundColor: item.color }]}
+              onPress={() => console.log(`Selected time: ${item.time}, score: ${item.score}`)}
+            >
               <Text style={styles.slotTime}>{item.time}</Text>
               <Text style={styles.slotScore}>{item.score}</Text>
-            </View>
+            </TouchableOpacity>
           )}
         />
     </ImageBackground>
