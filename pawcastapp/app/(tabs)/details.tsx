@@ -79,35 +79,29 @@ export default function WeatherPage() {
   }, [targetHour]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ImageBackground
-        source={require('../../assets/images/Husky.png')} // Replace with your image path
-        style={styles.background}
-        resizeMode="cover"
-      >
-        <View style={styles.content}>
-          <View style={styles.timeBox}>
-            <Text style={styles.time}>{targetHour}</Text>
-          </View>
-
-          {loading || !weather ? (
-            <ActivityIndicator size="large" color="#000" />
-          ) : (
-            <>
-              <View style={styles.box}><Text style={styles.value}>{weather.uv}{'\n'}<Text style={styles.label}>UV Radiation</Text></Text></View>
-              <View style={styles.box}><Text style={styles.value}>{weather.temperature}°C{'\n'}<Text style={styles.label}>Temperature</Text></Text></View>
-              <View style={styles.box}><Text style={styles.value}>{weather.humidity}%{'\n'}<Text style={styles.label}>Humidity</Text></Text></View>
-
-              {ratingText && (
-                <View style={[styles.rating, { backgroundColor: color || 'green' }]}>
-                  <Text style={styles.ratingText}>{ratingText}</Text>
-                </View>
-              )}
-            </>
-          )}
+    <View style={styles.overlay}>
+      <View style={styles.content}>
+        <View style={styles.timeBox}>
+          <Text style={styles.time}>{targetHour}</Text>
         </View>
-      </ImageBackground>
-    </SafeAreaView>
+
+        {loading || !weather ? (
+          <ActivityIndicator size="large" color="#000" />
+        ) : (
+          <>
+            <View style={styles.box}><Text style={styles.value}>{weather.uv}{'\n'}<Text style={styles.label}>UV Radiation</Text></Text></View>
+            <View style={styles.box}><Text style={styles.value}>{weather.temperature}°C{'\n'}<Text style={styles.label}>Temperature</Text></Text></View>
+            <View style={styles.box}><Text style={styles.value}>{weather.humidity}%{'\n'}<Text style={styles.label}>Humidity</Text></Text></View>
+
+            {ratingText && (
+              <View style={[styles.rating, { backgroundColor: color || 'green' }]}>
+                <Text style={styles.ratingText}>{ratingText}</Text>
+              </View>
+            )}
+          </>
+        )}
+      </View>
+    </View>
   );
 }
 
@@ -164,5 +158,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.25)", // Optional dim overlay
+    padding: 20,
+    paddingBottom: 0
   },
 });
