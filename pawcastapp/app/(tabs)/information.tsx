@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
-  Platform
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BlurView } from "expo-blur";

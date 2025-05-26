@@ -6,9 +6,9 @@ import { fetchWeatherApi } from 'openmeteo';
 import PagerView from "react-native-pager-view";
 import DogWeather from "./weather";
 import { LogBox } from 'react-native';
-import { useMemo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Dog, useRegistration } from '../register/registrationContext';
+import { Dog } from '../register/registrationContext';
 import Menu from "./menu";
 LogBox.ignoreAllLogs();
 
@@ -240,7 +240,7 @@ export default function Home() {
     >
       <Menu title={"Dog Walking Time"}></Menu>
 
-      <PagerView style={{ flex: 1 }} initialPage={0}>
+      <PagerView style={styles.pager} initialPage={0}>
         {dogsHourScores?.map((dog, index) => (
           <DogWeather key={index} {...dog} />
         ))}
@@ -249,7 +249,7 @@ export default function Home() {
   );
 }
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -259,13 +259,10 @@ export const styles = StyleSheet.create({
     height: "100%",
     width: "100%"
   },
-  background: {
-    flex: 1,
-  },
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.25)", // Optional dim overlay
-    padding: 20,
+    padding: 15,
     paddingBottom: 0
   },
   header: {
@@ -277,63 +274,6 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#FFE600",
-  },
-  subtitle: {
-    color: "#000",
-    marginTop: 4,
-    marginBottom: 20,
-    fontStyle: "italic",
-    textAlign: "center",
-    alignSelf: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    borderRadius: 20,
-    padding: 10,
-    alignItems: "center",
-  },
-  weatherBox: {
-    alignSelf: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  temp: {
-    fontSize: 48,
-    fontWeight: "bold",
-  },
-  weather: {
-    fontSize: 20,
-    fontWeight: "600",
-    marginTop: 5,
-  },
-  slotList: {
-    gap: 12,
-  },
-  slot: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  slotTime: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#000",
-  },
-  slotScore: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#000",
-  },
-  boxstyle: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    padding: 10,
-    borderRadius: 5,
-    height: 40,
-    width: 250,
   },
   modalOverlay: {
     flex: 1,
@@ -358,4 +298,8 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     color: "#000",
   },
+  pager: {
+    flex: 1,
+    borderRadius: 20
+  }
 })
