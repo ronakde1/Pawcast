@@ -149,35 +149,71 @@ function breedtochange(breedname: string): number{
 }
 
 
-function colouring(score: number) {
-    if (score <= 4) {
+async function colouring(scorePromise: Promise<number | undefined>): Promise<string> {
+  try {
+    const score = await scorePromise;
+    if (score === undefined) {
+      return "#00ff00"; 
+    } else if (score <= 4) {
       return "#D00000";
     } else if (score < 7) {
       return "#F4A300";
     } else {
       return "#38B000";
     }
+  } catch {
+    return "#00ff00"; 
+  }
 }
 
 
 
+
 export default function Home() {
+
   const { data } = useRegistration();
   const breed = (data.dogs[0]?.breed ?? 'No breed available');
   console.log(breed);
   const breed_n = breedtochange(breed)
   console.log(breed_n)
 
-  const timeSlots = [
-    // Need to compute colour for these timings
-    { time: dateToHourString(now),              score: score(now,breed_n),                color: "#F4A300"},
-    { time: dateToHourString(addHours(now, 1)), score: score(addHours(now, 1),breed_n),   color: "#F4A300"},
-    { time: dateToHourString(addHours(now, 2)), score: score(addHours(now, 2),breed_n),   color: "#38B000"},
-    { time: dateToHourString(addHours(now, 3)), score: score(addHours(now, 3),breed_n),   color: "#38B000"},
-    { time: dateToHourString(addHours(now, 4)), score: score(addHours(now, 4),breed_n),   color: "#D00000"},
-    { time: dateToHourString(addHours(now, 5)), score: score(addHours(now, 5),breed_n),   color: "#F4A300"},
-    { time: dateToHourString(addHours(now, 6)), score: score(addHours(now, 6),breed_n),   color: "#D00000"},
-  ]
+  // const timeSlots = [
+  //   { time: dateToHourString(now),              score: score(now,breed_n),                color: colouring(score(now,breed_n))},
+  //   { time: dateToHourString(addHours(now, 1)), score: score(addHours(now, 1),breed_n),   color: colouring(score(addHours(now, 1),breed_n))},
+  //   { time: dateToHourString(addHours(now, 2)), score: score(addHours(now, 2),breed_n),   color: "#38B000"},
+  //   { time: dateToHourString(addHours(now, 3)), score: score(addHours(now, 3),breed_n),   color: "#38B000"},
+  //   { time: dateToHourString(addHours(now, 4)), score: score(addHours(now, 4),breed_n),   color: "#D00000"},
+  //   { time: dateToHourString(addHours(now, 5)), score: score(addHours(now, 5),breed_n),   color: "#F4A300"},
+  //   { time: dateToHourString(addHours(now, 6)), score: score(addHours(now, 6),breed_n),   color: "#D00000"},
+  // ]
+
+  async function buildTimeSlots() {
+    const hoursToAdd = [0, 1, 2, 3, 4, 5, 6];
+  
+    const timeSlots = await Promise.all(
+      hoursToAdd.map(async (h) => {
+        const time = addHours(now, h);
+        const scoreVal = await score(time, breed_n);
+        const colorVal = await colouring(Promise.resolve(scoreVal));
+  
+        return {
+          time: dateToHourString(time),
+          score: scoreVal,
+          color: colorVal,
+        };
+      })
+    );
+  
+    return timeSlots;
+  }
+  const [timeSlots, setTimeSlots] = useState<{ time: string; score: number | undefined; color: string }[]>([]);
+
+    useEffect(() => {
+      buildTimeSlots().then(setTimeSlots);
+    }, []);
+
+
+
 
   const [currentTemp, setCurrentTemp] = useState<number | undefined>(undefined);
   const [modalVisible, setModalVisible] = useState(false); // Added state for modal visibility
