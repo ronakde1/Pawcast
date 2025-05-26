@@ -115,6 +115,8 @@ function TimeToTemperature(x: number) {
 
 
 
+let DONT_DELETE_THIS_THE_ENTIRE_WEBSITE_IS_DEPENDENT_ON_THIS = TimeToTemperature(0); 
+
 //------------------------------
 
 const now = new Date()
@@ -128,16 +130,12 @@ function addHours(date: Date, hours: number) {
 console.log(now.getHours())
 function dateToHourString(date: Date) {
   return date.getHours() + ": 00"
-}
+} 
 function temperature(dateyeye: Date){
   let hour = dateyeye.getHours();
   return TimeToTemperature(hour);
 }
 function score(dateyeye: Date, breed_n: number){
-  // const { data } = useRegistration();
-  // const breed = (data.dogs[0]?.breed ?? 'No breed available');
-  // const breed_n = breedtochange(breed)
-  // console.log("working!",breed_n)
   return TemptoScore(temperature(dateyeye),breed_n);
 }
 
