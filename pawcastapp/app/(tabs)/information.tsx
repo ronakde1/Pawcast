@@ -4,54 +4,63 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  ImageBackground,
   TouchableOpacity,
   Keyboard,
   Platform
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BlurView } from "expo-blur";
+import { Dog } from "../register/registrationContext";
 
 export default function Information() {
-  const [dogName, setDogName] = useState("");
-  const [breed, setBreed] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [editing, setEditing] = useState<"name" | "breed" | null>(null);
+  // const [dogName, setDogName] = useState("");
+  // const [breed, setBreed] = useState("");
+  // const [birthDate, setBirthDate] = useState("");
+  const [editing, setEditing] = useState<{ dogIndex: number; field: "name" | "breed" } | null>(null);
+  const [dogInfo, setDogInfo] = useState<Dog[] | null>(null);
 
   useEffect(() => {
-    (async () => {
-      const n = await AsyncStorage.getItem("dogName");
-      const b = await AsyncStorage.getItem("breed");
-      const d = await AsyncStorage.getItem("birthDate");
-      if (n) setDogName(n);
-      if (b) setBreed(b);
-      if (d) setBirthDate(d);
-    })();
+    async function fetchData() {
+      // Fetch saved user data from AsyncStorage
+      try {
+        const jsonString = await AsyncStorage.getItem("userData");
+        if (jsonString != null) {
+          const savedData = JSON.parse(jsonString);
+
+          setDogInfo(savedData.dogs.map((dog: Dog) => ({
+            name: dog.name,
+            breed: dog.breed,
+          })));
+        }
+      } catch (error) {
+        console.error("Error loading user data from AsyncStorage:", error);
+      }
+    }
+
+    fetchData();
   }, []);
 
-  const calculateAge = () => {
-    if (!birthDate) return "—";
-    const birth = new Date(birthDate);
-    const now = new Date();
-    let years = now.getFullYear() - birth.getFullYear();
-    let months = now.getMonth() - birth.getMonth();
-    if (now.getDate() < birth.getDate()) months--;
-    if (months < 0) {
-      years--;
-      months += 12;
-    }
-    if (years > 0) return `${years} year${years > 1 ? "s" : ""}`;
-    return `${months} month${months > 1 ? "s" : ""}`;
-  };
+  // const calculateAge = () => {
+  //   if (!birthDate) return "—";
+  //   const birth = new Date(birthDate);
+  //   const now = new Date();
+  //   let years = now.getFullYear() - birth.getFullYear();
+  //   let months = now.getMonth() - birth.getMonth();
+  //   if (now.getDate() < birth.getDate()) months--;
+  //   if (months < 0) {
+  //     years--;
+  //     months += 12;
+  //   }
+  //   if (years > 0) return `${years} year${years > 1 ? "s" : ""}`;
+  //   return `${months} month${months > 1 ? "s" : ""}`;
+  // };
 
   const saveField = async () => {
     try {
-      if (editing === "name") {
-        await AsyncStorage.setItem("dogName", dogName);
-      }
-      if (editing === "breed") {
-        await AsyncStorage.setItem("breed", breed);
-      }
+      await AsyncStorage.setItem(
+        "userData", 
+        JSON.stringify({ dogs: dogInfo })
+      )
     } catch (e) {
       console.warn("Error saving field", e);
     }
@@ -59,17 +68,27 @@ export default function Information() {
     Keyboard.dismiss();
   };
 
+  const handleChange = (text: string, dogIndex: number, field: "name" | "breed") => {
+    setDogInfo(prev =>
+      prev ? prev.map((dog, i) => 
+        i === dogIndex ? { ...dog, [field]: text } : dog
+      )
+      : prev
+    );
+  };
+
   const renderRow = (
     label: string,
     value: string,
     onChange: (t: string) => void,
-    mode: "name" | "breed"
+    mode: "name" | "breed",
+    index: number
   ) => (
     <BlurView intensity={70} tint="light" style={styles.card}>
       <View style={styles.row}>
         <View style={styles.left}>
           <Text style={styles.label}>{label}</Text>
-          {editing === mode ? (
+          {editing && editing.dogIndex === index && editing.field === mode ? (
             <TextInput
               style={styles.input}
               value={value}
@@ -84,43 +103,43 @@ export default function Information() {
         </View>
         <TouchableOpacity
           onPress={() => {
-            if (editing === mode) {
+            if (editing && editing.dogIndex === index && editing.field === mode) {
               saveField();
             } else {
-              setEditing(mode);
+              setEditing({ dogIndex: index, field: mode });
             }
           }}
         >
-          <Text style={styles.edit}>{editing === mode ? "Save" : "Edit"}</Text>
+          <Text style={styles.edit}>
+            {editing && editing.dogIndex === index && editing.field === mode ? "Save" : "Edit"}
+          </Text>
         </TouchableOpacity>
       </View>
     </BlurView>
   );
 
   return (
-    <ImageBackground
-      source={require("../../assets/images/Husky.png")}
-      resizeMode="cover"
-      style={styles.background}
-      blurRadius={Platform.OS === "android" ? 2 : 0} // Android no soporta blur en ImageBackground
-    >
-      <View style={styles.overlay}>
-        <Text style={styles.title}>Dog information</Text>
+    <View style={styles.overlay}>
+      <Text style={styles.title}>Dog information</Text>
 
-        {renderRow("Name", dogName, setDogName, "name")}
-        {renderRow("Breed", breed, setBreed, "breed")}
+      {dogInfo?.map((dog: Dog, index: number) => (
+        <View style={styles.box} key={index}>
+          {renderRow("Name", dog.name, (text) => handleChange(text, index, "name"), "name", index)}
+          {renderRow("Breed", dog.breed, (text) => handleChange(text, index, "breed"), "breed", index)}
+        </View>
+      ))}
 
-        <BlurView intensity={70} tint="light" style={styles.card}>
-          <View style={styles.row}>
-            <View style={styles.left}>
-              <Text style={styles.label}>Age</Text>
-              <Text style={styles.value}>{calculateAge()}</Text>
-            </View>
-            <Text style={[styles.edit, { opacity: 0.4 }]}>Edit</Text>
+
+      {/* <BlurView intensity={70} tint="light" style={styles.card}>
+        <View style={styles.row}>
+          <View style={styles.left}>
+            <Text style={styles.label}>Age</Text>
+            <Text style={styles.value}>{calculateAge()}</Text>
           </View>
-        </BlurView>
-      </View>
-    </ImageBackground>
+          <Text style={[styles.edit, { opacity: 0.4 }]}>Edit</Text>
+        </View>
+      </BlurView> */}
+    </View>
   );
 }
 
@@ -176,4 +195,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#00C2FF",
   },
+  box: {
+    padding: 12,
+    paddingBottom: 0,
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    justifyContent: 'center',
+  }
 });

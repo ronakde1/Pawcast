@@ -11,6 +11,7 @@ export default function DogDetails() {
   const [breed, setBreed] = useState('');
   const [dogAge, setDogAge] = useState('');
   const [dogImageUri, setDogImageUri] = useState('');
+  const [imageName, setImageName] = useState<string>('');
   const { setData } = useRegistration();
   const router = useRouter();
 
@@ -24,16 +25,17 @@ export default function DogDetails() {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images', 'videos'],
-      allowsEditing: true,
-      aspect: [4, 3],
+      mediaTypes: ['images'],
+      allowsEditing: false,
       quality: 1,
     });
 
     console.log(result);
 
     if (!result.canceled) {
-      setDogImageUri(result.assets[0].uri);
+      const img = result.assets[0]
+      setDogImageUri(img.uri);
+      setImageName(img.fileName ?? '');
     }
   };
 
@@ -114,13 +116,17 @@ export default function DogDetails() {
           style={styles.boxstyle}
           keyboardType='numeric'
           value={dogAge}
-          onChangeText={setDogAge}
+          onChangeText={(text) => {
+            const numericText = text.replace(/[^0-9]/g, '');
+            setDogAge(numericText);
+          }}
           placeholder=""
         />
       </View>
 
       <View style={styles.btn}>
         <Button title="Upload Image" onPress={pickImage} color="grey"/>
+        {imageName !== '' && <Text>{imageName}</Text>}
       </View>
       <View style={styles.navContainer}>
         <View style={styles.btn}>

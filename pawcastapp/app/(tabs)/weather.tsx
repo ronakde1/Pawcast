@@ -31,7 +31,7 @@ export default function DogWeather({
       const resolved = await Promise.all(
         slots.map(async (slot) => ({
           time: slot.time,
-          score: await slot.score,
+          score: slot.score,
           color: slot.color,
         }))
       );
