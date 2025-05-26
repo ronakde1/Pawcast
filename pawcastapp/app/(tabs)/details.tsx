@@ -1,3 +1,4 @@
+import { useLocalSearchParams } from 'expo-router';
 import { fetchWeatherApi } from 'openmeteo';
 import React, { useEffect, useState } from 'react';
 import {
@@ -16,10 +17,18 @@ interface WeatherData {
 }
 
 export default function WeatherPage() {
+  const { targetHour: paramHour, ratingText, color } = useLocalSearchParams<{
+    targetHour?: string;
+    ratingText?: string;
+    color?: string;
+  }>();
+  
+  const now = new Date();
+  const fallbackHour = now.getHours().toString().padStart(2, '0') + ":00";
+  const targetHour = (paramHour ?? fallbackHour);
+
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const targetHour = '10:00';
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -44,9 +53,10 @@ export default function WeatherPage() {
         const humidityArray = hourly.variables(1)!.valuesArray()!;
         const uvArray = hourly.variables(2)!.valuesArray()!;
 
+        const cleanedTarget = (targetHour ?? "").replace(/\s/g, ""); // remove all whitespace
         const hourIndex = timeArray.findIndex(time => {
           const hourStr = time.toISOString().substring(11, 16);
-          return hourStr === targetHour;
+          return hourStr === cleanedTarget;
         });
 
         if (hourIndex === -1) {
@@ -88,9 +98,11 @@ export default function WeatherPage() {
               <View style={styles.box}><Text style={styles.value}>{weather.temperature}°C{'\n'}<Text style={styles.label}>Temperature</Text></Text></View>
               <View style={styles.box}><Text style={styles.value}>{weather.humidity}%{'\n'}<Text style={styles.label}>Humidity</Text></Text></View>
 
-              <View style={styles.rating}>
-                <Text style={styles.ratingText}>8</Text>
-              </View>
+              {ratingText && (
+                <View style={[styles.rating, { backgroundColor: color || 'green' }]}>
+                  <Text style={styles.ratingText}>{ratingText}</Text>
+                </View>
+              )}
             </>
           )}
         </View>
