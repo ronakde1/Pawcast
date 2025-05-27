@@ -7,14 +7,18 @@ import {
   TouchableOpacity,
   Keyboard,
   Button, 
+  
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BlurView } from "expo-blur";
 import { Dog } from "../(register)/registrationContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Menu from "./menu";
+import { useRouter } from 'expo-router';
+
 
 export default function Information() {
+  const router = useRouter();
   // const [dogName, setDogName] = useState("");
   // const [breed, setBreed] = useState("");
   // const [birthDate, setBirthDate] = useState("");
@@ -68,18 +72,18 @@ export default function Information() {
     setEditing(null);
     Keyboard.dismiss();
   };
-  const removeDog = async (indexToRemove: number) => {
-    if (!dogInfo) return;
-  
-    const updatedDogs = dogInfo.filter((_, index) => index !== indexToRemove);
-    setDogInfo(updatedDogs);
-  
-    try {
-      await AsyncStorage.setItem("userData", JSON.stringify({ dogs: updatedDogs }));
-    } catch (e) {
-      console.warn("Error removing dog", e);
-    }
-  };    
+const removeDog = async (indexToRemove: number) => {
+      if (!dogInfo) return;
+    
+      const updatedDogs = dogInfo.filter((_, index) => index !== indexToRemove);
+      setDogInfo(updatedDogs);
+    
+      try {
+        await AsyncStorage.setItem("userData", JSON.stringify({ dogs: updatedDogs }));
+      } catch (e) {
+        console.warn("Error removing dog", e);
+      }
+    };    
   const handleChange = (text: string, dogIndex: number, field: "name" | "breed") => {
     setDogInfo(prev =>
       prev ? prev.map((dog, i) => 
@@ -146,6 +150,10 @@ export default function Information() {
 
           </View>
         ))}
+    <TouchableOpacity onPress={() => router.push('/dog2')}>
+      <Text style={styles.edit}>Add</Text>
+    </TouchableOpacity>
+
       </View>
 
 
@@ -217,10 +225,15 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#00C2FF",
   },
-  remove: {
+  add: {
     fontSize: 16,
     fontWeight: "600",
     color: "#0AA0C5",
+  },
+  remove: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#C50A1A",
   },
   box: {
     padding: 12,

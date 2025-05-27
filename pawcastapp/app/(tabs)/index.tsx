@@ -462,7 +462,6 @@ export default function Home() {
         console.error("Error loading user data from AsyncStorage:", error);
       }
     }
-
     fetchData();
   }, []);
 
