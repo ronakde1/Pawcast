@@ -1,5 +1,5 @@
 import { Text, View, Image, StyleSheet, FlatList, TouchableOpacity, Modal } from "react-native";
-import { Link, router } from "expo-router";
+import { useNavigation } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchWeatherApi } from 'openmeteo';
@@ -431,11 +431,17 @@ async function colouring(scorePromise: Promise<number | undefined>): Promise<str
 
 export default function Home() {
   const [dogsHourScores, setScores] = useState<DogHourScore[] | null>(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     async function fetchData() {
       // Fetch temperature
       const temp = await temperature(now);
+
+      navigation.addListener('beforeRemove', (e) => {
+        // prevent back action AFTER registering
+        e.preventDefault();
+      });
 
       // Fetch saved user data from AsyncStorage
       try {

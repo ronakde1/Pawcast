@@ -47,8 +47,6 @@ export default function DogDetails() {
       { label: 'Yorkshire Terrier (Yorkie)', value: 'Yorkshire Terrier (Yorkie)'},
   ]
 
-  // const breedsList = breedsData.map(obj => {obj.value})
-
   const validate = () => {
     const newErrors: { name?: string; breed?: string } = {};
     if (!dogName.trim()) newErrors.name = 'Dog name is required';
@@ -238,21 +236,3 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
-
-// const pickerSelectStyles = StyleSheet.create({
-//   inputAndroid: {
-//     fontSize: 16,
-//     paddingHorizontal: 10,
-//     paddingVertical: 8,
-//     color: 'black',
-//   },
-//   viewContainer: {
-//     height: 40,
-//     borderColor: 'grey',
-//     borderWidth: 1,
-//     borderRadius: 5,
-//     marginTop: 5,
-//     marginBottom: 5,
-//     justifyContent: 'center',
-//   },
-// });
