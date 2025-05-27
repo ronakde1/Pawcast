@@ -109,8 +109,6 @@ const breedDictionary: { [key: string]: number } = {
   "shiba": -2,
   "retriever": 1,
   "poodle": 2,
-  "No breed available" : 0,
-  "": 0
 };
 
 
@@ -153,7 +151,7 @@ function score(dateyeye: Date, breed_n: number){
 
 
 function breedtochange(breedname: string): number{
-  return breedDictionary[breedname];
+  return breedDictionary[breedname] ?? 0;
 }
 
 
