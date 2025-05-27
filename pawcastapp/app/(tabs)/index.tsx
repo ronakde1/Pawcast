@@ -406,7 +406,7 @@ function score(dateyeye: Date, breed_n: number){
 
 
 function breedtochange(breedname: string): number{
-  return breedDictionary[breedname];
+  return breedDictionary[breedname]??0;
 }
 
 
