@@ -153,11 +153,7 @@ const removeDog = async (indexToRemove: number) => {
     <TouchableOpacity onPress={() => router.push('/dog2')}>
       <Text style={styles.edit}>Add</Text>
     </TouchableOpacity>
-
       </View>
-
-
-
       {}
     </SafeAreaView>
   );
