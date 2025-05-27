@@ -400,7 +400,7 @@ function temperature(dateyeye: Date){
   return TimeToTemperature(hour);
 }
 function score(dateyeye: Date, breed_n: number){
-  return TemptoScore(temperature(dateyeye),breed_n);
+  return (TemptoScore(temperature(dateyeye),breed_n));
 }
 
 
@@ -455,6 +455,7 @@ export default function Home() {
               slots: await buildTimeSlots(dog.breed),
             }))
           )
+          
           setScores(dogsHourScores);
         }
       } catch (error) {
@@ -472,8 +473,9 @@ export default function Home() {
     const timeSlots = await Promise.all(
       hoursToAdd.map(async (h) => {
         const time = addHours(now, h);
-        const scoreVal = await score(time, breedtochange(breed));
-        const colorVal = await colouring(Promise.resolve(scoreVal));
+        const scoreVal = (await score(time, breedtochange(breed)))+"/10";
+
+        const colorVal = await colouring(Promise.resolve((await score(time, breedtochange(breed)))));
   
         return {
           time: dateToHourString(time),
@@ -481,8 +483,7 @@ export default function Home() {
           color: colorVal,
         };
       })
-    );
-  
+    );  
     return timeSlots;
   }
 
@@ -497,6 +498,7 @@ export default function Home() {
         {dogsHourScores?.map((dog, index) => (
           <DogWeather key={index} {...dog} />
         ))}
+
       </PagerView>
     </SafeAreaView>
   );

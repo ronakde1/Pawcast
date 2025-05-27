@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  Button, 
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BlurView } from "expo-blur";
@@ -55,6 +56,7 @@ export default function Information() {
   // };
 
   const saveField = async () => {
+    
     try {
       await AsyncStorage.setItem(
         "userData", 
@@ -66,7 +68,18 @@ export default function Information() {
     setEditing(null);
     Keyboard.dismiss();
   };
-
+  const removeDog = async (indexToRemove: number) => {
+    if (!dogInfo) return;
+  
+    const updatedDogs = dogInfo.filter((_, index) => index !== indexToRemove);
+    setDogInfo(updatedDogs);
+  
+    try {
+      await AsyncStorage.setItem("userData", JSON.stringify({ dogs: updatedDogs }));
+    } catch (e) {
+      console.warn("Error removing dog", e);
+    }
+  };    
   const handleChange = (text: string, dogIndex: number, field: "name" | "breed") => {
     setDogInfo(prev =>
       prev ? prev.map((dog, i) => 
@@ -113,6 +126,7 @@ export default function Information() {
             {editing && editing.dogIndex === index && editing.field === mode ? "Save" : "Edit"}
           </Text>
         </TouchableOpacity>
+        
       </View>
     </BlurView>
   );
@@ -126,13 +140,21 @@ export default function Information() {
           <View style={styles.box} key={index}>
             {renderRow("Name", dog.name, (text) => handleChange(text, index, "name"), "name", index)}
             {renderRow("Breed", dog.breed, (text) => handleChange(text, index, "breed"), "breed", index)}
+            <TouchableOpacity onPress={() => removeDog(index)}>
+              <Text style={styles.remove}>Remove</Text>
+            </TouchableOpacity>
+
           </View>
         ))}
       </View>
 
 
 
-      {/* <BlurView intensity={70} tint="light" style={styles.card}>
+      {}
+    </SafeAreaView>
+  );
+}
+/* <BlurView intensity={70} tint="light" style={styles.card}>
         <View style={styles.row}>
           <View style={styles.left}>
             <Text style={styles.label}>Age</Text>
@@ -140,11 +162,8 @@ export default function Information() {
           </View>
           <Text style={[styles.edit, { opacity: 0.4 }]}>Edit</Text>
         </View>
-      </BlurView> */}
-    </SafeAreaView>
-  );
-}
-
+      </BlurView> */
+//was in bracket
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -197,6 +216,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#00C2FF",
+  },
+  remove: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#0AA0C5",
   },
   box: {
     padding: 12,
