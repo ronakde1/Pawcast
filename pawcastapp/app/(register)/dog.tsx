@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useRouter } from 'expo-router';
-import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
+import { Text, View, TextInput, Button, StyleSheet, BackHandler } from 'react-native';
 import { useRegistration, Dog } from './registrationContext';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Dropdown } from 'react-native-element-dropdown';
 
 export default function DogDetails() {
   const [dogName, setDogName] = useState('');
@@ -87,7 +87,7 @@ export default function DogDetails() {
     }));
 
     router.push({
-      pathname: "/register/dog"
+      pathname: "./dog"
     });
   };
 
@@ -112,12 +112,12 @@ export default function DogDetails() {
         console.error('Failed to save to AsyncStorage:', err);
       });
 
+      AsyncStorage.setItem('hasOnBoarded', 'true');
+
       return updated;
     });
-    
-    router.push({
-      pathname: "/(tabs)",
-    })
+
+    router.replace('/(tabs)');
   }
 
   return (
@@ -138,12 +138,17 @@ export default function DogDetails() {
 
       <View style={styles.inputContainer}>
         <Text>Breed</Text>
-        <RNPickerSelect
-          onValueChange={(value) => setBreed(value)}
-          placeholder={{ label: 'Choose the breed', value: null }}
-          items={breedsList}
-          style={pickerSelectStyles}
+        <Dropdown
+          style={styles.dropdown}
+          data={breedsList}
+          labelField="label"
+          valueField="value"
+          placeholder="Choose the breed"
+          search
           value={breed}
+          onChange={(value: string) => {
+            setBreed(value);
+          }}
         />
         {errors.breed && <Text style={styles.errorText}>{errors.breed}</Text>}
       </View>
@@ -220,22 +225,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    color: 'black',
-  },
-  viewContainer: {
+  dropdown: {
     height: 40,
     borderColor: 'grey',
     borderWidth: 1,
     borderRadius: 5,
+    paddingHorizontal: 10,
     marginTop: 5,
     marginBottom: 5,
-    justifyContent: 'center',
   },
 });
+
+// const pickerSelectStyles = StyleSheet.create({
+//   inputAndroid: {
+//     fontSize: 16,
+//     paddingHorizontal: 10,
+//     paddingVertical: 8,
+//     color: 'black',
+//   },
+//   viewContainer: {
+//     height: 40,
+//     borderColor: 'grey',
+//     borderWidth: 1,
+//     borderRadius: 5,
+//     marginTop: 5,
+//     marginBottom: 5,
+//     justifyContent: 'center',
+//   },
+// });

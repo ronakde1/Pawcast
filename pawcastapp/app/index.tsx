@@ -9,11 +9,11 @@ export default function OnboardingCheck() {
 
   useEffect(() => {
     (async () => {
-      const onboarded = await AsyncStorage.getItem('hasOnboarded');
+      const onboarded = await AsyncStorage.getItem('hasOnBoarded');
       if (onboarded === 'true') {
         router.replace('/(tabs)');
       } else {
-        router.replace('/register/user');
+        router.replace('/(register)/user');
       }
       setLoading(false);
     })();
