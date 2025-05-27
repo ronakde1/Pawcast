@@ -428,7 +428,6 @@ async function colouring(scorePromise: Promise<number | undefined>): Promise<str
 
 
 export default function Home() {
-  const [modalVisible, setModalVisible] = useState(false); // Added state for modal visibility
   const [dogsHourScores, setScores] = useState<DogHourScore[] | null>(null);
 
   useEffect(() => {
@@ -450,7 +449,7 @@ export default function Home() {
                 ? { uri: dog.imageUri }
                 : "",
               temperature: `${temp}°C`,
-              weather: "SUNNY",
+              weather: "CLOUDY",
               slots: await buildTimeSlots(dog.breed),
             }))
           )
@@ -466,7 +465,7 @@ export default function Home() {
 
 
   async function buildTimeSlots(breed: string) {
-    const hoursToAdd = Array.from({ length: 12 }, (_, i) => i);
+    const hoursToAdd = Array.from({ length: 8 }, (_, i) => i);
   
     const timeSlots = await Promise.all(
       hoursToAdd.map(async (h) => {

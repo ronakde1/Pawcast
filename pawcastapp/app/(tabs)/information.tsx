@@ -27,6 +27,7 @@ export default function Information() {
         const jsonString = await AsyncStorage.getItem("userData");
         if (jsonString != null) {
           const savedData = JSON.parse(jsonString);
+          console.log(savedData)
 
           setDogInfo(savedData.dogs);
         }

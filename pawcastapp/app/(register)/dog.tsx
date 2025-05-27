@@ -47,6 +47,8 @@ export default function DogDetails() {
       { label: 'Yorkshire Terrier (Yorkie)', value: 'Yorkshire Terrier (Yorkie)'},
   ]
 
+  // const breedsList = breedsData.map(obj => {obj.value})
+
   const validate = () => {
     const newErrors: { name?: string; breed?: string } = {};
     if (!dogName.trim()) newErrors.name = 'Dog name is required';
@@ -146,8 +148,9 @@ export default function DogDetails() {
           placeholder="Choose the breed"
           search
           value={breed}
-          onChange={(value: string) => {
-            setBreed(value);
+          onChange={obj => {
+            console.log(obj.value)
+            setBreed(obj.value);
           }}
         />
         {errors.breed && <Text style={styles.errorText}>{errors.breed}</Text>}
