@@ -8,7 +8,7 @@ import DogWeather from "./weather";
 import { LogBox } from 'react-native';
 import { useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Dog } from '../register/registrationContext';
+import { Dog } from '../(register)/registrationContext';
 import Menu from "./menu";
 LogBox.ignoreAllLogs();
 
@@ -314,7 +314,6 @@ const breedDictionary: { [key: string]: number } = {
   "Schnoodle": -6, 
   "Scottish Deerhound": -6, 
   "Scottish Terrier": 0, 
-  "Sealyham Terrier": -6, 
   "Sealyham Terrier": -6, 
   "Sheepadoodle": 0, 
   "Shepadoodle": -6, 
