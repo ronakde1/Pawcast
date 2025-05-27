@@ -18,7 +18,7 @@ export default function UserDetails() {
       location: location,
     }));
     router.push({
-      pathname: "/register/dog",
+      pathname: "./dog",
     });
   };
 

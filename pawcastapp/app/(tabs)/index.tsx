@@ -8,7 +8,7 @@ import DogWeather from "./weather";
 import { LogBox } from 'react-native';
 import { useEffect, useState } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Dog } from '../register/registrationContext';
+import { Dog } from '../(register)/registrationContext';
 import Menu from "./menu";
 LogBox.ignoreAllLogs();
 

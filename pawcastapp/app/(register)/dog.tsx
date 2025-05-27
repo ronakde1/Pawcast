@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useRouter } from 'expo-router';
-import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
+import { Text, View, TextInput, Button, StyleSheet, BackHandler } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import { useRegistration, Dog } from './registrationContext';
 import * as ImagePicker from 'expo-image-picker';
@@ -64,7 +64,7 @@ export default function DogDetails() {
     }));
 
     router.push({
-      pathname: "/register/dog"
+      pathname: "./dog"
     });
   };
 
@@ -89,12 +89,12 @@ export default function DogDetails() {
         console.error('Failed to save to AsyncStorage:', err);
       });
 
+      AsyncStorage.setItem('hasOnBoarded', 'true');
+
       return updated;
     });
-    
-    router.push({
-      pathname: "/(tabs)",
-    })
+
+    router.replace('/(tabs)');
   }
 
   return (

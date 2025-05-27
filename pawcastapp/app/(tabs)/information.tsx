@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BlurView } from "expo-blur";
-import { Dog } from "../register/registrationContext";
+import { Dog } from "../(register)/registrationContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Menu from "./menu";
 
@@ -28,10 +28,7 @@ export default function Information() {
         if (jsonString != null) {
           const savedData = JSON.parse(jsonString);
 
-          setDogInfo(savedData.dogs.map((dog: Dog) => ({
-            name: dog.name,
-            breed: dog.breed,
-          })));
+          setDogInfo(savedData.dogs);
         }
       } catch (error) {
         console.error("Error loading user data from AsyncStorage:", error);
