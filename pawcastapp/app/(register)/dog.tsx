@@ -62,8 +62,6 @@ export default function DogDetails() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       const img = result.assets[0]
       setDogImageUri(img.uri);

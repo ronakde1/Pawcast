@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { Text, View, TextInput, Button, StyleSheet, BackHandler } from 'react-native';
-import { useRegistration, Dog } from './registrationContext';
+import { Dog } from './registrationContext';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -13,7 +13,6 @@ export default function DogDetails() {
   const [dogImageUri, setDogImageUri] = useState('');
   const [imageName, setImageName] = useState<string>('');
   const [errors, setErrors] = useState<{ name?: string; breed?: string }>({});
-  const { setData } = useRegistration();
   const router = useRouter();
 
   const breedsList = [
@@ -47,8 +46,6 @@ export default function DogDetails() {
       { label: 'Yorkshire Terrier (Yorkie)', value: 'Yorkshire Terrier (Yorkie)'},
   ]
 
-  // const breedsList = breedsData.map(obj => {obj.value})
-
   const validate = () => {
     const newErrors: { name?: string; breed?: string } = {};
     if (!dogName.trim()) newErrors.name = 'Dog name is required';
@@ -64,33 +61,11 @@ export default function DogDetails() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       const img = result.assets[0]
       setDogImageUri(img.uri);
       setImageName(img.fileName ?? '');
     }
-  };
-
-  const handleAddMore = () => {
-    if (!validate()) return;
-
-    const newDog: Dog = {
-      name: dogName.trim(),
-      breed: breed,
-      age: Number(dogAge),
-      imageUri: dogImageUri,
-    };
-
-    setData(prev => ({
-      ...prev,
-      dogs: [...prev.dogs, newDog],
-    }));
-
-    router.push({
-      pathname: "./dog2"
-    });
   };
 
   const handleSubmit = async () => {
@@ -114,22 +89,6 @@ export default function DogDetails() {
       } catch (error) {
         console.error("Error saving user data to AsyncStorage:", error);
     }
-
-    // setData(prev => {
-    //   const updated = {
-    //     ...prev,
-    //     dogs: [...prev.dogs, newDog],
-    //   };
-
-    //   // Save updated data to AsyncStorage to use after registration
-    //   AsyncStorage.setItem('userData', JSON.stringify(updated)).catch(err => {
-    //     console.error('Failed to save to AsyncStorage:', err);
-    //   });
-
-    //   AsyncStorage.setItem('hasOnBoarded', 'true');
-
-    //   return updated;
-    // });
 
     router.replace('/(tabs)');
   }
@@ -189,19 +148,9 @@ export default function DogDetails() {
         <View style={styles.btn}>
           <Button onPress={() => router.back()} title="Back" color="#2C2C2C" />
         </View>
-        <View style={styles.btn}>
-          <Button onPress={handleAddMore} title="Add more" color="#2C2C2C" />
-        </View>
         <View style={styles.btn} >
-          <Button onPress={handleSubmit} title="Register" color="#2C2C2C" />
+          <Button onPress={handleSubmit} title="Add" color="#2C2C2C" />
         </View>
-        <View style={styles.btn}>
-      <Button
-        onPress={() => router.push('/')}
-        title="Skip"
-        color="#2C2C2C"
-      />
-    </View>
       </View>
     </View>
   );

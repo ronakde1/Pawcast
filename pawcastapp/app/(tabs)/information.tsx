@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
-  Button, 
+  FlatList, 
   
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,9 +19,6 @@ import { useRouter } from 'expo-router';
 
 export default function Information() {
   const router = useRouter();
-  // const [dogName, setDogName] = useState("");
-  // const [breed, setBreed] = useState("");
-  // const [birthDate, setBirthDate] = useState("");
   const [editing, setEditing] = useState<{ dogIndex: number; field: "name" | "breed" } | null>(null);
   const [dogInfo, setDogInfo] = useState<Dog[] | null>(null);
 
@@ -43,21 +40,6 @@ export default function Information() {
 
     fetchData();
   }, []);
-
-  // const calculateAge = () => {
-  //   if (!birthDate) return "—";
-  //   const birth = new Date(birthDate);
-  //   const now = new Date();
-  //   let years = now.getFullYear() - birth.getFullYear();
-  //   let months = now.getMonth() - birth.getMonth();
-  //   if (now.getDate() < birth.getDate()) months--;
-  //   if (months < 0) {
-  //     years--;
-  //     months += 12;
-  //   }
-  //   if (years > 0) return `${years} year${years > 1 ? "s" : ""}`;
-  //   return `${months} month${months > 1 ? "s" : ""}`;
-  // };
 
   const saveField = async () => {
     
@@ -139,35 +121,31 @@ const removeDog = async (indexToRemove: number) => {
     <SafeAreaView style={styles.overlay}>
       <Menu title="Dog Information"></Menu>
 
-      <View>
-        {dogInfo?.map((dog: Dog, index: number) => (
-          <View style={styles.box} key={index}>
-            {renderRow("Name", dog.name, (text) => handleChange(text, index, "name"), "name", index)}
-            {renderRow("Breed", dog.breed, (text) => handleChange(text, index, "breed"), "breed", index)}
+      <FlatList
+        data={dogInfo}
+        keyExtractor={(_, index) => index.toString()}
+        contentContainerStyle={styles.listContainer}
+        renderItem={({ item, index }) => (
+          <View style={styles.box}>
+            {renderRow("Name", item.name, (text) => handleChange(text, index, "name"), "name", index)}
+            {renderRow("Breed", item.breed, (text) => handleChange(text, index, "breed"), "breed", index)}
             <TouchableOpacity onPress={() => removeDog(index)}>
               <Text style={styles.remove}>Remove</Text>
             </TouchableOpacity>
-
           </View>
-        ))}
-    <TouchableOpacity onPress={() => router.push('/dog2')}>
-      <Text style={styles.edit}>Add</Text>
-    </TouchableOpacity>
-      </View>
-      {}
+        )}
+        ListFooterComponent={
+          <View style={styles.addBtn}>
+            <TouchableOpacity onPress={() => router.push('/addDog')}>
+              <Text style={styles.add}>Add</Text>
+            </TouchableOpacity>
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 }
-/* <BlurView intensity={70} tint="light" style={styles.card}>
-        <View style={styles.row}>
-          <View style={styles.left}>
-            <Text style={styles.label}>Age</Text>
-            <Text style={styles.value}>{calculateAge()}</Text>
-          </View>
-          <Text style={[styles.edit, { opacity: 0.4 }]}>Edit</Text>
-        </View>
-      </BlurView> */
-//was in bracket
+
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -221,11 +199,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#00C2FF",
   },
-  add: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#0AA0C5",
-  },
   remove: {
     fontSize: 16,
     fontWeight: "600",
@@ -233,11 +206,28 @@ const styles = StyleSheet.create({
   },
   box: {
     padding: 12,
-    paddingBottom: 0,
     marginVertical: 8,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     justifyContent: 'center',
+  },
+  listContainer: {
+    paddingBottom: 50
+  },
+  addBtn: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  add: {
+    backgroundColor: '#22C55E',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    overflow: 'hidden',
+    textAlign: 'center',
   }
 });
