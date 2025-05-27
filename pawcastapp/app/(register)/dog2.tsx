@@ -89,7 +89,7 @@ export default function DogDetails() {
     }));
 
     router.push({
-      pathname: "./dog"
+      pathname: "./dog2"
     });
   };
 
@@ -103,21 +103,33 @@ export default function DogDetails() {
       imageUri: dogImageUri,
     };
 
-    setData(prev => {
-      const updated = {
-        ...prev,
-        dogs: [...prev.dogs, newDog],
-      };
+    try {
+        const jsonString = await AsyncStorage.getItem("userData");
+        if (jsonString != null) {
+          const savedData = JSON.parse(jsonString);
+          savedData.dogs.push(newDog)
+          console.log(savedData)
+          await AsyncStorage.setItem("userData", JSON.stringify(savedData));
+        }
+      } catch (error) {
+        console.error("Error saving user data to AsyncStorage:", error);
+    }
 
-      // Save updated data to AsyncStorage to use after registration
-      AsyncStorage.setItem('userData', JSON.stringify(updated)).catch(err => {
-        console.error('Failed to save to AsyncStorage:', err);
-      });
+    // setData(prev => {
+    //   const updated = {
+    //     ...prev,
+    //     dogs: [...prev.dogs, newDog],
+    //   };
 
-      AsyncStorage.setItem('hasOnBoarded', 'true');
+    //   // Save updated data to AsyncStorage to use after registration
+    //   AsyncStorage.setItem('userData', JSON.stringify(updated)).catch(err => {
+    //     console.error('Failed to save to AsyncStorage:', err);
+    //   });
 
-      return updated;
-    });
+    //   AsyncStorage.setItem('hasOnBoarded', 'true');
+
+    //   return updated;
+    // });
 
     router.replace('/(tabs)');
   }
