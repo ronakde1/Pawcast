@@ -55,7 +55,10 @@ export default function DogWeather({
           <Text style={styles.temp}>{temperature}</Text>
           <Text style={styles.weather}>{weather}</Text>
         </TouchableOpacity>
-
+        <View style={style2.labelstyle}>
+          <Text style={style2.textstyle}>Time</Text>
+          <Text style={style2.textstyle}>Score/10</Text>
+        </View>
         <FlatList
           data={resolvedSlots}
           keyExtractor={(item) => item.time}
@@ -83,6 +86,24 @@ export default function DogWeather({
     </View>
   );
 }
+
+const style2 = StyleSheet.create({
+  labelstyle: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: 20,
+    fontSize: 12,
+    marginBottom: 20, 
+    borderRadius: 50,
+    
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    padding: 5,
+  },
+  textstyle:{
+    fontSize: 20,
+    fontWeight: "bold",
+  }
+})
 
 const styles = StyleSheet.create({
   page: {
