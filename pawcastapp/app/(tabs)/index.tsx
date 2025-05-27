@@ -404,8 +404,10 @@ function score(dateyeye: Date, breed_n: number){
 }
 
 
-function breedtochange(breedname: string): number{
-  return breedDictionary[breedname]??0;
+function breedtochange(breedname: any): number{
+  console.log((breedname).value);
+  console.log(breedDictionary[breedname.value])
+  return breedDictionary[breedname.value]??0;
 }
 
 
