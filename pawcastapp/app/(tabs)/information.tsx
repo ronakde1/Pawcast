@@ -178,12 +178,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#fff",
+    color: "#000",
     marginBottom: 4,
   },
   value: {
     fontSize: 18,
-    color: "#fff",
+    color: "#000",
   },
   input: {
     fontSize: 18,
