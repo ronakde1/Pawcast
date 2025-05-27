@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRegistration } from './registrationContext';
 
 export default function UserDetails() {
@@ -15,7 +15,7 @@ export default function UserDetails() {
     setData(prev => ({
       ...prev,
       username: name,
-      location: location,
+      location: "",
     }));
     router.push({
       pathname: "./dog",
@@ -37,7 +37,7 @@ export default function UserDetails() {
         />
       </View>
 
-      <View style={styles.inputContainer}>
+      {/* <View style={styles.inputContainer}>
         <Text>Location</Text>
         <TextInput
           style={styles.boxstyle}
@@ -45,7 +45,7 @@ export default function UserDetails() {
           onChangeText={setLocation}
           placeholder="Enter your location"
         />
-      </View>
+      </View> */}
 
       <Button onPress={handleNext} title="Next" color="#2C2C2C" />
     </View>
